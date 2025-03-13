@@ -56,10 +56,9 @@ var n = Body(
 			Attr("data-target", "#navbarNav").
 			Attr("aria-controls", "navbarNav").
 			Attr("aria-expanded", "false").
-			Attr("aria-label", "Toggle navigation").
-			Children(
-				Span("").Class("navbar-toggler-icon"),
-			),
+			Attr("aria-label", "Toggle navigation").Children(
+			Span("").Class("navbar-toggler-icon"),
+		),
 		Div(
 			Ul(
 				Li(
@@ -146,11 +145,10 @@ var n = Body(
 
 var n = Body(
 	Div(
-		Span("").
-			Children(
-				Text("Hello"),
-				B("world"),
-			),
+		Span("").Children(
+			Text("Hello"),
+			B("world"),
+		),
 	),
 )
 `,
@@ -166,10 +164,9 @@ var n = Body(
 
 var n = Body(
 	Div(
-		Span("").
-			Children(
-				B("world"),
-			),
+		Span("").Children(
+			B("world"),
+		),
 	),
 )
 `,
@@ -186,11 +183,10 @@ var n = Body(
 
 var n = h.Body(
 	h.Div(
-		h.Span("").
-			Children(
-				h.Text("Hello"),
-				h.B("world"),
-			),
+		h.Span("").Children(
+			h.Text("Hello"),
+			h.B("world"),
+		),
 	),
 )
 `,
@@ -446,70 +442,56 @@ var n = Body(
 `,
 			gocode: `package hello
 
-var n = Body().
-	Children(
-		Nav().Class("navbar navbar-expand-lg navbar-light bg-light").
-			Children(
-				B("b string"),
-				A().Class("navbar-brand").
-					Href("#").
-					Children(
-						Text("Navbar"),
+var n = Body().Children(
+	Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
+		B("b string"),
+		A().Class("navbar-brand").
+			Href("#").Children(
+			Text("Navbar"),
+		),
+		Button("").Class("navbar-toggler").
+			Type("button").
+			Attr("data-toggle", "collapse").
+			Attr("data-target", "#navbarNav").
+			Attr("aria-controls", "navbarNav").
+			Attr("aria-expanded", "false").
+			Attr("aria-label", "Toggle navigation").Children(
+			Span("").Class("navbar-toggler-icon"),
+		),
+		Div().Class("collapse navbar-collapse").
+			Id("navbarNav").Children(
+			Ul().Class("navbar-nav").Children(
+				Li().Class("nav-item active").Children(
+					A().Class("nav-link").
+						Href("#").Children(
+						Text("Home"),
+						Span("(current)").Class("sr-only"),
 					),
-				Button("").Class("navbar-toggler").
-					Type("button").
-					Attr("data-toggle", "collapse").
-					Attr("data-target", "#navbarNav").
-					Attr("aria-controls", "navbarNav").
-					Attr("aria-expanded", "false").
-					Attr("aria-label", "Toggle navigation").
-					Children(
-						Span("").Class("navbar-toggler-icon"),
+				),
+				Li().Class("nav-item").Children(
+					A().Class("nav-link").
+						Href("#").Children(
+						Text("Features"),
 					),
-				Div().Class("collapse navbar-collapse").
-					Id("navbarNav").
-					Children(
-						Ul().Class("navbar-nav").
-							Children(
-								Li().Class("nav-item active").
-									Children(
-										A().Class("nav-link").
-											Href("#").
-											Children(
-												Text("Home"),
-												Span("(current)").Class("sr-only"),
-											),
-									),
-								Li().Class("nav-item").
-									Children(
-										A().Class("nav-link").
-											Href("#").
-											Children(
-												Text("Features"),
-											),
-									),
-								Li().Class("nav-item").
-									Children(
-										A().Class("nav-link").
-											Href("#").
-											Children(
-												Text("Pricing"),
-											),
-									),
-								Li().Class("nav-item").
-									Children(
-										A().Class("nav-link disabled").
-											Href("#").
-											TabIndex(-1).
-											Attr("aria-disabled", "true").
-											Children(
-												Text("Disabled"),
-											),
-									),
-							),
+				),
+				Li().Class("nav-item").Children(
+					A().Class("nav-link").
+						Href("#").Children(
+						Text("Pricing"),
 					),
+				),
+				Li().Class("nav-item").Children(
+					A().Class("nav-link disabled").
+						Href("#").
+						TabIndex(-1).
+						Attr("aria-disabled", "true").Children(
+						Text("Disabled"),
+					),
+				),
 			),
-	)
+		),
+	),
+)
 `,
 		},
 	}
