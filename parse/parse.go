@@ -17,7 +17,21 @@ import (
 	"golang.org/x/net/html"
 )
 
+// 定义全局变量来存储组件定义
+var componentDefinitions map[string]ComponentDefinition
+
 func GenerateHTMLGo(pkg string, childrenMode bool, htmlCode io.Reader) string {
+	// 尝试加载组件定义数据
+	if componentDefinitions == nil {
+		var err error
+		componentDefinitions, err = ParseComponentData()
+		if err != nil {
+			// 记录错误但继续执行，使用默认的HTML处理
+			fmt.Printf("Warning: Failed to load component data: %v\n", err)
+			componentDefinitions = make(map[string]ComponentDefinition)
+		}
+	}
+
 	n, err := html.Parse(htmlCode)
 	if err != nil {
 		panic(err)
@@ -66,16 +80,17 @@ func pkgDot(pkg string) (r string) {
 }
 
 type funcCall struct {
-	Pkg      string
-	Name     string
-	Text     string
-	TakeText bool
-	Children []*funcCall
-	Attrs    []html.Attribute
+	Pkg          string
+	Name         string
+	Text         string
+	TakeText     bool
+	Children     []*funcCall
+	Attrs        []html.Attribute
+	IsComponent  bool                // 标记是否为组件
+	ComponentDef ComponentDefinition // 存储组件定义
 }
 
 func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode bool) (r []byte) {
-
 	buf := bytes.NewBuffer(nil)
 
 	if len(fc.Text) > 0 {
@@ -87,7 +102,19 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 	if fc.TakeText {
 		newline = ""
 	}
-	_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(pkg), strcase.ToCamel(fc.Name), newline)
+
+	// 处理组件或普通HTML标签
+	if fc.IsComponent {
+		// 处理组件
+		_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(pkg), fc.ComponentDef.Go, newline)
+	} else if strings.Contains(fc.Name, "-") {
+		// 处理未知的自定义组件，转换为驼峰命名
+		componentName := convertToCamelCase(fc.Name)
+		_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(pkg), componentName, newline)
+	} else {
+		// 处理普通HTML标签，使用原始逻辑
+		_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(pkg), strcase.ToCamel(fc.Name), newline)
+	}
 
 	needWriteChilren := false
 	if childrenMode {
@@ -112,29 +139,81 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 	}
 
 	buf.WriteString(")")
-	for i, att := range fc.Attrs {
-		attFuncName := getFuncName(att.Key, methodNames)
 
+	// 处理属性
+	for i, att := range fc.Attrs {
 		buf.WriteString(".")
 		if i > 0 {
 			buf.WriteString("\n")
 		}
 
-		if len(attFuncName) > 0 {
-			var val interface{} = att.Val
-			if strings.Index(boolAttr, "|"+attFuncName+"|") >= 0 {
-				val = true
+		if fc.IsComponent {
+			// 检查属性是否在组件定义中存在
+			if attrDef, ok := fc.ComponentDef.Attrs[att.Key]; ok {
+				var val interface{} = att.Val
+
+				// 根据接受类型处理值
+				if attrDef.Accept == "bool" {
+					val = true
+					if att.Val == "false" {
+						val = false
+					}
+				} else if attrDef.Accept == "int" {
+					var err error
+					val, err = strconv.ParseInt(att.Val, 10, 64)
+					if err != nil {
+						// 如果解析失败，保持原始值
+						val = att.Val
+					}
+				}
+
+				_, _ = fmt.Fprintf(buf, "%s(%s)", attrDef.Go, normalizeGoString(val))
+			} else {
+				// 如果属性未在定义中找到，使用Attr
+				_, _ = fmt.Fprintf(buf, "Attr(%#+v, %s)", expandAlpineKey(att.Key), normalizeGoString(att.Val))
 			}
-			if strings.Index(intAttr, "|"+attFuncName+"|") >= 0 {
-				var err error
-				val, err = strconv.ParseInt(att.Val, 10, 64)
-				if err != nil {
-					panic(err)
+		} else if strings.HasPrefix(fc.Name, "v-") || strings.HasPrefix(fc.Name, "V") {
+			// Vuetify组件的特殊属性处理
+			attName := strcase.ToCamel(att.Key)
+			var val interface{} = att.Val
+
+			// 处理布尔属性
+			if att.Val == "" || att.Val == "true" {
+				if att.Key == "required" || att.Key == "disabled" || att.Key == "readonly" || att.Key == "multiple" {
+					val = true
 				}
 			}
-			_, _ = fmt.Fprintf(buf, "%s(%s)", attFuncName, normalizeGoString(val))
-		} else {
+
+			// 处理数字属性
+			if att.Key == "width" || att.Key == "height" || att.Key == "max-width" || att.Key == "max-height" {
+				if i, err := strconv.ParseInt(att.Val, 10, 64); err == nil {
+					val = i
+				}
+			}
+
+			_, _ = fmt.Fprintf(buf, "%s(%s)", attName, normalizeGoString(val))
+		} else if strings.Contains(fc.Name, "-") {
+			// 未知组件的属性都使用Attr
 			_, _ = fmt.Fprintf(buf, "Attr(%#+v, %s)", expandAlpineKey(att.Key), normalizeGoString(att.Val))
+		} else {
+			// 原始HTML属性处理逻辑
+			attFuncName := getFuncName(att.Key, methodNames)
+			if len(attFuncName) > 0 {
+				var val interface{} = att.Val
+				if strings.Index(boolAttr, "|"+attFuncName+"|") >= 0 {
+					val = true
+				}
+				if strings.Index(intAttr, "|"+attFuncName+"|") >= 0 {
+					var err error
+					val, err = strconv.ParseInt(att.Val, 10, 64)
+					if err != nil {
+						panic(err)
+					}
+				}
+				_, _ = fmt.Fprintf(buf, "%s(%s)", attFuncName, normalizeGoString(val))
+			} else {
+				_, _ = fmt.Fprintf(buf, "Attr(%#+v, %s)", expandAlpineKey(att.Key), normalizeGoString(att.Val))
+			}
 		}
 	}
 
@@ -190,16 +269,44 @@ func walk(n *html.Node, fc *funcCall, methodNames []string) {
 	switch n.Type {
 	case html.ElementNode:
 		if len(strings.TrimSpace(n.Data)) > 0 {
-			fc.Name = strcase.ToCamel(strings.TrimSpace(n.Data))
+			tagName := strings.TrimSpace(n.Data)
+
+			// 检查是否是组件
+			if componentDef, isComponent := componentDefinitions[tagName]; isComponent {
+				// 是组件，设置组件相关信息
+				fc.IsComponent = true
+				fc.ComponentDef = componentDef
+				fc.Name = tagName
+
+				// 根据Accept属性判断是否接受文本
+				if componentDef.Accept == "none" {
+					fc.TakeText = false
+				} else if strings.Contains(componentDef.Accept, "...h.HTMLComponent") {
+					// 允许子组件，不设置TakeText为true
+					fc.TakeText = false
+				}
+			} else if strings.HasPrefix(tagName, "v-") {
+				// Vuetify组件 (v-btn, v-card 等)
+				// 转换为对应的驼峰命名格式 (VBtn, VCard 等)
+				fc.Name = strings.ToUpper(tagName[2:3]) + tagName[3:]
+				// Vuetify组件通常使用子元素而非TakeText
+				fc.TakeText = false
+			} else if strings.Contains(tagName, "-") {
+				// 对于自定义组件（包含连字符的标签），保持原始名称
+				fc.Name = tagName
+			} else {
+				// 不是组件，使用原始逻辑
+				fc.Name = strcase.ToCamel(tagName)
+				// 检查是否是允许文本的HTML标签
+				if strings.Index(textTags, "|"+fc.Name+"|") >= 0 {
+					fc.TakeText = true
+				}
+			}
 		}
 	case html.TextNode:
 		if len(strings.TrimSpace(n.Data)) > 0 {
 			fc.Text = strings.TrimSpace(n.Data)
 		}
-	}
-
-	if strings.Index(textTags, "|"+fc.Name+"|") >= 0 {
-		fc.TakeText = true
 	}
 
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -232,4 +339,13 @@ func tagMethodNames() (r []string) {
 		r = append(r, tagType.Method(i).Name)
 	}
 	return
+}
+
+// 将连字符格式的标签名转换为驼峰命名
+func convertToCamelCase(name string) string {
+	parts := strings.Split(name, "-")
+	for i := range parts {
+		parts[i] = strcase.ToCamel(parts[i])
+	}
+	return strings.Join(parts, "")
 }
