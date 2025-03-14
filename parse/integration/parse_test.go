@@ -1,24 +1,14 @@
-package parse_test
+package integration
 
 import (
-	"strings"
 	"testing"
-
-	"github.com/sunfmin/html2go/parse"
-	"github.com/theplant/testingutils"
 )
 
-func TestAll(t *testing.T) {
-	var cases = []struct {
-		name         string
-		pkg          string
-		childrenMode bool
-		html         string
-		gocode       string
-	}{
-		{
-			name: "normal",
-			html: `
+// HTMLGoTestCases contains all test scenarios for HTML to Go conversion
+var HTMLGoTestCases = []HTMLGoTestCase{
+	{
+		Name: "normal",
+		HTML: `
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">Navbar</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +32,7 @@ func TestAll(t *testing.T) {
   </div>
 </nav>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Nav(
@@ -94,16 +84,16 @@ var n = Body(
 	).Class("navbar navbar-expand-lg navbar-light bg-light"),
 )
 `,
-		},
-		{
-			name: "bool attribute always be true even if value is false",
-			html: `
+	},
+	{
+		Name: "bool attribute always be true even if value is false",
+		HTML: `
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <input readonly required disabled checked tabindex="-1">
   <input readonly="false">
 </nav>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Nav(
@@ -116,15 +106,15 @@ var n = Body(
 	).Class("navbar navbar-expand-lg navbar-light bg-light"),
 )
 `,
-		},
-		{
-			name: "text attr with text",
-			html: `
+	},
+	{
+		Name: "text attr with text",
+		HTML: `
 <div>
   <span>Hello</span>
 </div>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Div(
@@ -132,16 +122,16 @@ var n = Body(
 	),
 )
 `,
-		},
+	},
 
-		{
-			name: "text attr with more children",
-			html: `
+	{
+		Name: "text attr with more children",
+		HTML: `
 <div>
   <span>Hello<b>world</b></span>
 </div>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Div(
@@ -152,15 +142,15 @@ var n = Body(
 	),
 )
 `,
-		},
-		{
-			name: "text attr on tag children",
-			html: `
+	},
+	{
+		Name: "text attr on tag children",
+		HTML: `
 <div>
   <span><b>world</b></span>
 </div>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Div(
@@ -170,16 +160,16 @@ var n = Body(
 	),
 )
 `,
-		},
-		{
-			name: "text attr with more children with pkg",
-			pkg:  "h",
-			html: `
+	},
+	{
+		Name: "text attr with more children with pkg",
+		Pkg:  "h",
+		HTML: `
 <div>
   <span>Hello<b>world</b></span>
 </div>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = h.Body(
 	h.Div(
@@ -190,12 +180,12 @@ var n = h.Body(
 	),
 )
 `,
-		},
+	},
 
-		{
-			name: "code with javascript",
-			pkg:  "",
-			html: `
+	{
+		Name: "code with javascript",
+		Pkg:  "",
+		HTML: `
 <div class="antialiased min-h-screen bg-gray-100 flex items-center">
   
 <div class="w-full max-w-sm mx-auto">
@@ -289,7 +279,7 @@ var n = h.Body(
 </div>
 </div
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body(
 	Div(
@@ -410,12 +400,12 @@ var n = Body(
 	).Class("antialiased min-h-screen bg-gray-100 flex items-center"),
 )
 `,
-		},
+	},
 
-		{
-			name:         "children mode",
-			childrenMode: true,
-			html: `
+	{
+		Name:         "children mode",
+		ChildrenMode: true,
+		HTML: `
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <b>b string</b>
   <a class="navbar-brand" href="#">Navbar</a>
@@ -440,7 +430,7 @@ var n = Body(
   </div>
 </nav>
 `,
-			gocode: `package hello
+		GoCode: `package hello
 
 var n = Body().Children(
 	Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
@@ -493,19 +483,10 @@ var n = Body().Children(
 	),
 )
 `,
-		},
-	}
+	},
+}
 
-	for _, c := range cases {
-		t.Run(c.name, func(t *testing.T) {
-			gocode := parse.GenerateHTMLGo(c.pkg, c.childrenMode, strings.NewReader(
-				strings.ReplaceAll(c.html, "|backquote|", "`"),
-			))
-			diff := testingutils.PrettyJsonDiff(strings.ReplaceAll(c.gocode, "|backquote|", "`"), gocode)
-
-			if len(diff) > 0 {
-				t.Error(diff)
-			}
-		})
-	}
+// TestAll runs all HTML to Go conversion test cases
+func TestAll(t *testing.T) {
+	RunHTMLGoTestCases(t, HTMLGoTestCases)
 }
