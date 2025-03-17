@@ -4,6 +4,9 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -277,5 +280,228 @@ func TestComponentMapGeneration(t *testing.T) {
 
 	if attr.Accept != "string" {
 		t.Errorf("Expected Accept to be 'string', got '%s'", attr.Accept)
+	}
+}
+
+// TestMultiFileComponent tests the ability to parse components defined across multiple files
+func TestMultiFileComponent(t *testing.T) {
+	// Create temporary directory for test files
+	tempDir, err := ioutil.TempDir("", "transform_test")
+	if err != nil {
+		t.Fatalf("Failed to create temp directory: %v", err)
+	}
+	defer os.RemoveAll(tempDir)
+
+	// Create btn.go
+	btnContent := `package vuetify
+
+import (
+	"context"
+	"fmt"
+
+	h "github.com/theplant/htmlgo"
+)
+
+type VBtnBuilder struct {
+	tag *h.HTMLTagBuilder
+}
+
+func (b *VBtnBuilder) Symbol(v interface{}) (r *VBtnBuilder) {
+	b.tag.Attr(":symbol", h.JSONString(v))
+	return b
+}
+
+func (b *VBtnBuilder) Text(v string) (r *VBtnBuilder) {
+	b.tag.Attr("text", v)
+	return b
+}
+
+func (b *VBtnBuilder) Color(v string) (r *VBtnBuilder) {
+	b.tag.Attr("color", v)
+	return b
+}
+
+func (b *VBtnBuilder) SetAttr(k string, v interface{}) {
+	b.tag.SetAttr(k, v)
+}
+
+func (b *VBtnBuilder) Children(children ...h.HTMLComponent) (r *VBtnBuilder) {
+	b.tag.Children(children...)
+	return b
+}
+
+func (b *VBtnBuilder) MarshalHTML(ctx context.Context) (r []byte, err error) {
+	return b.tag.MarshalHTML(ctx)
+}
+`
+
+	// Create fix-btn.go with additional methods
+	fixBtnContent := `package vuetify
+
+import (
+	"github.com/qor5/web/v3"
+	h "github.com/theplant/htmlgo"
+)
+
+func VBtn(text string) (r *VBtnBuilder) {
+	r = &VBtnBuilder{
+		tag: h.Tag("v-btn").Text(text),
+	}
+	return
+}
+
+func (b *VBtnBuilder) OnClick(eventFuncId string) (r *VBtnBuilder) {
+	b.tag.Attr("@click", web.POST().EventFunc(eventFuncId).Go())
+	return b
+}
+
+func (b *VBtnBuilder) AttrIf(key, value interface{}, add bool) (r *VBtnBuilder) {
+	b.tag.AttrIf(key, value, add)
+	return b
+}
+`
+
+	// Write test files
+	btnPath := filepath.Join(tempDir, "btn.go")
+	fixBtnPath := filepath.Join(tempDir, "fix-btn.go")
+
+	if err := ioutil.WriteFile(btnPath, []byte(btnContent), 0644); err != nil {
+		t.Fatalf("Failed to write btn.go: %v", err)
+	}
+
+	if err := ioutil.WriteFile(fixBtnPath, []byte(fixBtnContent), 0644); err != nil {
+		t.Fatalf("Failed to write fix-btn.go: %v", err)
+	}
+
+	// Define all non-common methods we expect to find
+	// These are methods defined in both btn.go and fix-btn.go that aren't in isCommonMethod
+	expectedAttrs := map[string]string{
+		"symbol":   "Symbol",
+		"text":     "Text",
+		"color":    "Color",
+		"on-click": "OnClick",
+	}
+
+	// Test 1: Parse the files in original order (btnPath then fixBtnPath)
+	t.Run("Original order", func(t *testing.T) {
+		componentMap, err := ParseGoFiles([]string{btnPath, fixBtnPath})
+		if err != nil {
+			t.Fatalf("Failed to parse files: %v", err)
+		}
+
+		// Log the actual content of the component map for debugging
+		t.Logf("Component map (original order): %+v", componentMap)
+
+		// Verify the component was correctly identified
+		btn, ok := componentMap["v-btn"]
+		if !ok {
+			t.Fatal("v-btn component not found")
+		}
+
+		// Verify the component properties
+		if btn.Go != "VBtn" {
+			t.Errorf("Expected Go name 'VBtn', got %q", btn.Go)
+		}
+
+		// Log all attributes found to help debug
+		t.Logf("Found attributes for v-btn: %+v", btn.Attrs)
+
+		// Verify that each expected attribute is present
+		for attrName, methodName := range expectedAttrs {
+			attr, exists := btn.Attrs[attrName]
+			if !exists {
+				t.Errorf("Expected attribute %q not found", attrName)
+				continue
+			}
+
+			if attr.Go != methodName {
+				t.Errorf("For attribute %q, expected method name %q, got %q", attrName, methodName, attr.Go)
+			}
+		}
+
+		// Verify that we didn't find any unexpected attributes
+		// This ensures ALL methods are accounted for
+		for attrName, attr := range btn.Attrs {
+			_, expected := expectedAttrs[attrName]
+			if !expected {
+				t.Errorf("Found unexpected attribute %q with method name %q", attrName, attr.Go)
+			}
+		}
+	})
+
+	// Test 2: Parse the files in reverse order (fixBtnPath then btnPath)
+	t.Run("Reverse order", func(t *testing.T) {
+		reverseComponentMap, err := ParseGoFiles([]string{fixBtnPath, btnPath})
+		if err != nil {
+			t.Fatalf("Failed to parse files in reverse order: %v", err)
+		}
+
+		// Log the actual content of the component map for debugging
+		t.Logf("Component map (reverse order): %+v", reverseComponentMap)
+
+		// Verify the component was correctly identified
+		btn, ok := reverseComponentMap["v-btn"]
+		if !ok {
+			t.Fatal("v-btn component not found when parsing in reverse order")
+		}
+
+		// Verify the component properties
+		if btn.Go != "VBtn" {
+			t.Errorf("Reverse order: Expected Go name 'VBtn', got %q", btn.Go)
+		}
+
+		// Verify that each expected attribute is present
+		for attrName, methodName := range expectedAttrs {
+			attr, exists := btn.Attrs[attrName]
+			if !exists {
+				t.Errorf("Reverse order: Expected attribute %q not found", attrName)
+				continue
+			}
+
+			if attr.Go != methodName {
+				t.Errorf("Reverse order: For attribute %q, expected method name %q, got %q", attrName, methodName, attr.Go)
+			}
+		}
+
+		// Verify that we didn't find any unexpected attributes
+		for attrName, attr := range btn.Attrs {
+			_, expected := expectedAttrs[attrName]
+			if !expected {
+				t.Errorf("Reverse order: Found unexpected attribute %q with method name %q", attrName, attr.Go)
+			}
+		}
+	})
+
+	// Test parsing a directory
+	dirComponentMap, err := ParseGoDir(tempDir)
+	if err != nil {
+		t.Fatalf("Failed to parse directory: %v", err)
+	}
+
+	// Verify directory parsing works the same
+	btn, ok := dirComponentMap["v-btn"]
+	if !ok {
+		t.Fatal("v-btn component not found when parsing directory")
+	}
+
+	// Verify attributes are the same for directory parsing
+	for attrName, methodName := range expectedAttrs {
+		attr, exists := btn.Attrs[attrName]
+		if !exists {
+			t.Errorf("Directory parsing: Expected attribute %q not found", attrName)
+			continue
+		}
+
+		if attr.Go != methodName {
+			t.Errorf("Directory parsing: For attribute %q, expected method name %q, got %q", attrName, methodName, attr.Go)
+		}
+	}
+
+	// Verify that all attributes are accounted for in directory parsing
+	for attrName, attr := range btn.Attrs {
+		_, expected := expectedAttrs[attrName]
+		if !expected {
+			t.Errorf("Directory parsing: Found unexpected attribute %q with method name %q", attrName, attr.Go)
+		}
 	}
 }

@@ -73,13 +73,13 @@ var n = Body(
 var n = Body(
 	VForm(
 		VTextField().Label("Name").
-			Required(true),
+			Attr("required", ""),
 		VTextField().Label("Email").
 			Type("email"),
 		VCheckbox().Label("Subscribe to newsletter"),
 		VBtn(
 			Text("Submit"),
-		).Type("submit").
+		).Attr("type", "submit").
 			Color("success"),
 	),
 )

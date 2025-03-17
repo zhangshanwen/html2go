@@ -74,32 +74,43 @@ func main() {
 
 // processVuetifyDirectory processes all Go files in the Vuetify directory
 func processVuetifyDirectory(dirPath string, componentMap transform.ComponentMap) error {
-	// Walk through all files and directories in the Vuetify directory
-	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
+	// Instead of processing files individually, use ParseGoDir to process the entire directory
+	dirComponents, err := transform.ParseGoDir(dirPath)
+	if err != nil {
+		return fmt.Errorf("error processing directory %s: %v", dirPath, err)
+	}
+
+	// Merge component information
+	for k, v := range dirComponents {
+		componentMap[k] = v
+	}
+
+	// Also process subdirectories
+	entries, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return fmt.Errorf("error reading directory %s: %v", dirPath, err)
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			// Skip directories that are unlikely to contain components
+			// (like "assets", "buildinAsserts", etc.)
+			subdir := entry.Name()
+			if strings.HasPrefix(subdir, ".") ||
+				strings.HasPrefix(subdir, "assets") ||
+				strings.HasPrefix(subdir, "buildinAsserts") {
+				continue
+			}
+
+			subdirPath := filepath.Join(dirPath, subdir)
+			err := processVuetifyDirectory(subdirPath, componentMap)
+			if err != nil {
+				return err
+			}
 		}
+	}
 
-		// Skip directories and non-Go files
-		if info.IsDir() || !strings.HasSuffix(info.Name(), ".go") {
-			return nil
-		}
-
-		// Parse the Go file and extract component information
-		fileComponents, err := transform.ParseGoFile(path)
-		if err != nil {
-			return fmt.Errorf("error processing %s: %v", path, err)
-		}
-
-		// Merge component information
-		for k, v := range fileComponents {
-			componentMap[k] = v
-		}
-
-		return nil
-	})
-
-	return err
+	return nil
 }
 
 // extractComponentInfo extracts component information from an AST node
@@ -242,6 +253,7 @@ func isCommonMethod(name string) bool {
 		"On":              true,
 		"Bind":            true,
 		"MarshalHTML":     true,
+		"AttrIf":          true,
 	}
 
 	return commonMethods[name]

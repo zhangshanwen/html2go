@@ -421,8 +421,341 @@
   },
   "v-autocomplete": {
     "go": "VAutocomplete",
-    "accept": "...h.HTMLComponent",
-    "attrs": {}
+    "accept": "none",
+    "attrs": {
+      "active": {
+        "go": "Active",
+        "accept": "bool"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "interface{}"
+      },
+      "auto-select-first": {
+        "go": "AutoSelectFirst",
+        "accept": "interface{}"
+      },
+      "autofocus": {
+        "go": "Autofocus",
+        "accept": "bool"
+      },
+      "base-color": {
+        "go": "BaseColor",
+        "accept": "string"
+      },
+      "bg-color": {
+        "go": "BgColor",
+        "accept": "string"
+      },
+      "center-affix": {
+        "go": "CenterAffix",
+        "accept": "bool"
+      },
+      "chips": {
+        "go": "Chips",
+        "accept": "bool"
+      },
+      "clear-icon": {
+        "go": "ClearIcon",
+        "accept": "interface{}"
+      },
+      "clear-on-select": {
+        "go": "ClearOnSelect",
+        "accept": "bool"
+      },
+      "clearable": {
+        "go": "Clearable",
+        "accept": "bool"
+      },
+      "closable-chips": {
+        "go": "ClosableChips",
+        "accept": "bool"
+      },
+      "close-text": {
+        "go": "CloseText",
+        "accept": "string"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "counter": {
+        "go": "Counter",
+        "accept": "interface{}"
+      },
+      "counter-value": {
+        "go": "CounterValue",
+        "accept": "interface{}"
+      },
+      "custom-filter": {
+        "go": "CustomFilter",
+        "accept": "interface{}"
+      },
+      "custom-key-filter": {
+        "go": "CustomKeyFilter",
+        "accept": "interface{}"
+      },
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "direction": {
+        "go": "Direction",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "eager": {
+        "go": "Eager",
+        "accept": "bool"
+      },
+      "error": {
+        "go": "Error",
+        "accept": "bool"
+      },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
+      "filter-keys": {
+        "go": "FilterKeys",
+        "accept": "interface{}"
+      },
+      "filter-mode": {
+        "go": "FilterMode",
+        "accept": "interface{}"
+      },
+      "flat": {
+        "go": "Flat",
+        "accept": "bool"
+      },
+      "focused": {
+        "go": "Focused",
+        "accept": "bool"
+      },
+      "hide-details": {
+        "go": "HideDetails",
+        "accept": "interface{}"
+      },
+      "hide-no-data": {
+        "go": "HideNoData",
+        "accept": "bool"
+      },
+      "hide-selected": {
+        "go": "HideSelected",
+        "accept": "bool"
+      },
+      "hide-spin-buttons": {
+        "go": "HideSpinButtons",
+        "accept": "bool"
+      },
+      "hint": {
+        "go": "Hint",
+        "accept": "string"
+      },
+      "id": {
+        "go": "Id",
+        "accept": "string"
+      },
+      "item-children": {
+        "go": "ItemChildren",
+        "accept": "interface{}"
+      },
+      "item-color": {
+        "go": "ItemColor",
+        "accept": "string"
+      },
+      "item-props": {
+        "go": "ItemProps",
+        "accept": "interface{}"
+      },
+      "item-title": {
+        "go": "ItemTitle",
+        "accept": "interface{}"
+      },
+      "item-value": {
+        "go": "ItemValue",
+        "accept": "interface{}"
+      },
+      "items": {
+        "go": "Items",
+        "accept": "interface{}"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "list-props": {
+        "go": "ListProps",
+        "accept": "interface{}"
+      },
+      "loading": {
+        "go": "Loading",
+        "accept": "interface{}"
+      },
+      "max-errors": {
+        "go": "MaxErrors",
+        "accept": "interface{}"
+      },
+      "max-width": {
+        "go": "MaxWidth",
+        "accept": "interface{}"
+      },
+      "menu": {
+        "go": "Menu",
+        "accept": "bool"
+      },
+      "menu-icon": {
+        "go": "MenuIcon",
+        "accept": "interface{}"
+      },
+      "menu-props": {
+        "go": "MenuProps",
+        "accept": "interface{}"
+      },
+      "messages": {
+        "go": "Messages",
+        "accept": "interface{}"
+      },
+      "min-width": {
+        "go": "MinWidth",
+        "accept": "interface{}"
+      },
+      "model-modifiers": {
+        "go": "ModelModifiers",
+        "accept": "interface{}"
+      },
+      "model-value": {
+        "go": "ModelValue",
+        "accept": "interface{}"
+      },
+      "multiple": {
+        "go": "Multiple",
+        "accept": "bool"
+      },
+      "name": {
+        "go": "Name",
+        "accept": "string"
+      },
+      "no-data-text": {
+        "go": "NoDataText",
+        "accept": "string"
+      },
+      "no-filter": {
+        "go": "NoFilter",
+        "accept": "bool"
+      },
+      "open-on-clear": {
+        "go": "OpenOnClear",
+        "accept": "bool"
+      },
+      "open-text": {
+        "go": "OpenText",
+        "accept": "string"
+      },
+      "persistent-clear": {
+        "go": "PersistentClear",
+        "accept": "bool"
+      },
+      "persistent-counter": {
+        "go": "PersistentCounter",
+        "accept": "bool"
+      },
+      "persistent-hint": {
+        "go": "PersistentHint",
+        "accept": "bool"
+      },
+      "persistent-placeholder": {
+        "go": "PersistentPlaceholder",
+        "accept": "bool"
+      },
+      "placeholder": {
+        "go": "Placeholder",
+        "accept": "string"
+      },
+      "prefix": {
+        "go": "Prefix",
+        "accept": "string"
+      },
+      "prepend-icon": {
+        "go": "PrependIcon",
+        "accept": "interface{}"
+      },
+      "prepend-inner-icon": {
+        "go": "PrependInnerIcon",
+        "accept": "interface{}"
+      },
+      "readonly": {
+        "go": "Readonly",
+        "accept": "bool"
+      },
+      "return-object": {
+        "go": "ReturnObject",
+        "accept": "bool"
+      },
+      "reverse": {
+        "go": "Reverse",
+        "accept": "bool"
+      },
+      "role": {
+        "go": "Role",
+        "accept": "string"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "interface{}"
+      },
+      "rules": {
+        "go": "Rules",
+        "accept": "interface{}"
+      },
+      "search": {
+        "go": "Search",
+        "accept": "string"
+      },
+      "single-line": {
+        "go": "SingleLine",
+        "accept": "bool"
+      },
+      "suffix": {
+        "go": "Suffix",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      },
+      "tile": {
+        "go": "Tile",
+        "accept": "bool"
+      },
+      "transition": {
+        "go": "Transition",
+        "accept": "interface{}"
+      },
+      "type": {
+        "go": "Type",
+        "accept": "string"
+      },
+      "validate-on": {
+        "go": "ValidateOn",
+        "accept": "interface{}"
+      },
+      "value-comparator": {
+        "go": "ValueComparator",
+        "accept": "interface{}"
+      },
+      "variant": {
+        "go": "Variant",
+        "accept": "interface{}"
+      },
+      "width": {
+        "go": "Width",
+        "accept": "interface{}"
+      }
+    }
   },
   "v-avatar": {
     "go": "VAvatar",
@@ -1075,7 +1408,168 @@
   "v-btn": {
     "go": "VBtn",
     "accept": "none",
-    "attrs": {}
+    "attrs": {
+      "active": {
+        "go": "Active",
+        "accept": "bool"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "interface{}"
+      },
+      "base-color": {
+        "go": "BaseColor",
+        "accept": "string"
+      },
+      "block": {
+        "go": "Block",
+        "accept": "bool"
+      },
+      "border": {
+        "go": "Border",
+        "accept": "interface{}"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "elevation": {
+        "go": "Elevation",
+        "accept": "interface{}"
+      },
+      "exact": {
+        "go": "Exact",
+        "accept": "bool"
+      },
+      "flat": {
+        "go": "Flat",
+        "accept": "bool"
+      },
+      "height": {
+        "go": "Height",
+        "accept": "interface{}"
+      },
+      "href": {
+        "go": "Href",
+        "accept": "string"
+      },
+      "icon": {
+        "go": "Icon",
+        "accept": "interface{}"
+      },
+      "loading": {
+        "go": "Loading",
+        "accept": "interface{}"
+      },
+      "location": {
+        "go": "Location",
+        "accept": "interface{}"
+      },
+      "max-height": {
+        "go": "MaxHeight",
+        "accept": "interface{}"
+      },
+      "max-width": {
+        "go": "MaxWidth",
+        "accept": "interface{}"
+      },
+      "min-height": {
+        "go": "MinHeight",
+        "accept": "interface{}"
+      },
+      "min-width": {
+        "go": "MinWidth",
+        "accept": "interface{}"
+      },
+      "on-click": {
+        "go": "OnClick",
+        "accept": "string"
+      },
+      "position": {
+        "go": "Position",
+        "accept": "interface{}"
+      },
+      "prepend-icon": {
+        "go": "PrependIcon",
+        "accept": "interface{}"
+      },
+      "readonly": {
+        "go": "Readonly",
+        "accept": "bool"
+      },
+      "replace": {
+        "go": "Replace",
+        "accept": "bool"
+      },
+      "ripple": {
+        "go": "Ripple",
+        "accept": "interface{}"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "interface{}"
+      },
+      "selected-class": {
+        "go": "SelectedClass",
+        "accept": "string"
+      },
+      "size": {
+        "go": "Size",
+        "accept": "interface{}"
+      },
+      "slim": {
+        "go": "Slim",
+        "accept": "bool"
+      },
+      "stacked": {
+        "go": "Stacked",
+        "accept": "bool"
+      },
+      "symbol": {
+        "go": "Symbol",
+        "accept": "interface{}"
+      },
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "text": {
+        "go": "Text",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      },
+      "tile": {
+        "go": "Tile",
+        "accept": "bool"
+      },
+      "to": {
+        "go": "To",
+        "accept": "interface{}"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
+      },
+      "variant": {
+        "go": "Variant",
+        "accept": "interface{}"
+      },
+      "width": {
+        "go": "Width",
+        "accept": "interface{}"
+      }
+    }
   },
   "v-btn-group": {
     "go": "VBtnGroup",
@@ -1980,6 +2474,10 @@
         "go": "Error",
         "accept": "bool"
       },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
       "false-icon": {
         "go": "FalseIcon",
         "accept": "interface{}"
@@ -2429,6 +2927,10 @@
       "theme": {
         "go": "Theme",
         "accept": "string"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
       },
       "value-comparator": {
         "go": "ValueComparator",
@@ -3018,13 +3520,25 @@
     "go": "VContainer",
     "accept": "...h.HTMLComponent",
     "attrs": {
+      "d-type": {
+        "go": "DType",
+        "accept": "DType"
+      },
       "fluid": {
         "go": "Fluid",
         "accept": "bool"
       },
+      "grid-list": {
+        "go": "GridList",
+        "accept": "SizeType"
+      },
       "tag": {
         "go": "Tag",
         "accept": "string"
+      },
+      "text-align": {
+        "go": "TextAlign",
+        "accept": "SizeType"
       }
     }
   },
@@ -5811,6 +6325,10 @@
         "go": "Error",
         "accept": "bool"
       },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
       "flat": {
         "go": "Flat",
         "accept": "bool"
@@ -6046,7 +6564,40 @@
   "v-icon": {
     "go": "VIcon",
     "accept": "none",
-    "attrs": {}
+    "attrs": {
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "end": {
+        "go": "End",
+        "accept": "bool"
+      },
+      "icon": {
+        "go": "Icon",
+        "accept": "interface{}"
+      },
+      "size": {
+        "go": "Size",
+        "accept": "interface{}"
+      },
+      "start": {
+        "go": "Start",
+        "accept": "bool"
+      },
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      }
+    }
   },
   "v-img": {
     "go": "VImg",
@@ -9048,7 +9599,312 @@
   "v-select": {
     "go": "VSelect",
     "accept": "...h.HTMLComponent",
-    "attrs": {}
+    "attrs": {
+      "active": {
+        "go": "Active",
+        "accept": "bool"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "interface{}"
+      },
+      "autofocus": {
+        "go": "Autofocus",
+        "accept": "bool"
+      },
+      "base-color": {
+        "go": "BaseColor",
+        "accept": "string"
+      },
+      "bg-color": {
+        "go": "BgColor",
+        "accept": "string"
+      },
+      "center-affix": {
+        "go": "CenterAffix",
+        "accept": "bool"
+      },
+      "chips": {
+        "go": "Chips",
+        "accept": "bool"
+      },
+      "clear-icon": {
+        "go": "ClearIcon",
+        "accept": "interface{}"
+      },
+      "clearable": {
+        "go": "Clearable",
+        "accept": "bool"
+      },
+      "closable-chips": {
+        "go": "ClosableChips",
+        "accept": "bool"
+      },
+      "close-text": {
+        "go": "CloseText",
+        "accept": "string"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "counter": {
+        "go": "Counter",
+        "accept": "interface{}"
+      },
+      "counter-value": {
+        "go": "CounterValue",
+        "accept": "interface{}"
+      },
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "direction": {
+        "go": "Direction",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "eager": {
+        "go": "Eager",
+        "accept": "bool"
+      },
+      "error": {
+        "go": "Error",
+        "accept": "bool"
+      },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
+      "flat": {
+        "go": "Flat",
+        "accept": "bool"
+      },
+      "focused": {
+        "go": "Focused",
+        "accept": "bool"
+      },
+      "hide-details": {
+        "go": "HideDetails",
+        "accept": "interface{}"
+      },
+      "hide-no-data": {
+        "go": "HideNoData",
+        "accept": "bool"
+      },
+      "hide-selected": {
+        "go": "HideSelected",
+        "accept": "bool"
+      },
+      "hide-spin-buttons": {
+        "go": "HideSpinButtons",
+        "accept": "bool"
+      },
+      "hint": {
+        "go": "Hint",
+        "accept": "string"
+      },
+      "id": {
+        "go": "Id",
+        "accept": "string"
+      },
+      "item-children": {
+        "go": "ItemChildren",
+        "accept": "interface{}"
+      },
+      "item-color": {
+        "go": "ItemColor",
+        "accept": "string"
+      },
+      "item-props": {
+        "go": "ItemProps",
+        "accept": "interface{}"
+      },
+      "item-title": {
+        "go": "ItemTitle",
+        "accept": "interface{}"
+      },
+      "item-value": {
+        "go": "ItemValue",
+        "accept": "interface{}"
+      },
+      "items": {
+        "go": "Items",
+        "accept": "interface{}"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "list-props": {
+        "go": "ListProps",
+        "accept": "interface{}"
+      },
+      "loading": {
+        "go": "Loading",
+        "accept": "interface{}"
+      },
+      "max-errors": {
+        "go": "MaxErrors",
+        "accept": "interface{}"
+      },
+      "max-width": {
+        "go": "MaxWidth",
+        "accept": "interface{}"
+      },
+      "menu": {
+        "go": "Menu",
+        "accept": "bool"
+      },
+      "menu-icon": {
+        "go": "MenuIcon",
+        "accept": "interface{}"
+      },
+      "menu-props": {
+        "go": "MenuProps",
+        "accept": "interface{}"
+      },
+      "messages": {
+        "go": "Messages",
+        "accept": "interface{}"
+      },
+      "min-width": {
+        "go": "MinWidth",
+        "accept": "interface{}"
+      },
+      "model-modifiers": {
+        "go": "ModelModifiers",
+        "accept": "interface{}"
+      },
+      "model-value": {
+        "go": "ModelValue",
+        "accept": "interface{}"
+      },
+      "multiple": {
+        "go": "Multiple",
+        "accept": "bool"
+      },
+      "name": {
+        "go": "Name",
+        "accept": "string"
+      },
+      "no-data-text": {
+        "go": "NoDataText",
+        "accept": "string"
+      },
+      "open-on-clear": {
+        "go": "OpenOnClear",
+        "accept": "bool"
+      },
+      "open-text": {
+        "go": "OpenText",
+        "accept": "string"
+      },
+      "persistent-clear": {
+        "go": "PersistentClear",
+        "accept": "bool"
+      },
+      "persistent-counter": {
+        "go": "PersistentCounter",
+        "accept": "bool"
+      },
+      "persistent-hint": {
+        "go": "PersistentHint",
+        "accept": "bool"
+      },
+      "persistent-placeholder": {
+        "go": "PersistentPlaceholder",
+        "accept": "bool"
+      },
+      "placeholder": {
+        "go": "Placeholder",
+        "accept": "string"
+      },
+      "prefix": {
+        "go": "Prefix",
+        "accept": "string"
+      },
+      "prepend-icon": {
+        "go": "PrependIcon",
+        "accept": "interface{}"
+      },
+      "prepend-inner-icon": {
+        "go": "PrependInnerIcon",
+        "accept": "interface{}"
+      },
+      "readonly": {
+        "go": "Readonly",
+        "accept": "bool"
+      },
+      "return-object": {
+        "go": "ReturnObject",
+        "accept": "bool"
+      },
+      "reverse": {
+        "go": "Reverse",
+        "accept": "bool"
+      },
+      "role": {
+        "go": "Role",
+        "accept": "string"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "interface{}"
+      },
+      "rules": {
+        "go": "Rules",
+        "accept": "interface{}"
+      },
+      "single-line": {
+        "go": "SingleLine",
+        "accept": "bool"
+      },
+      "suffix": {
+        "go": "Suffix",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      },
+      "tile": {
+        "go": "Tile",
+        "accept": "bool"
+      },
+      "transition": {
+        "go": "Transition",
+        "accept": "interface{}"
+      },
+      "type": {
+        "go": "Type",
+        "accept": "string"
+      },
+      "validate-on": {
+        "go": "ValidateOn",
+        "accept": "interface{}"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
+      },
+      "value-comparator": {
+        "go": "ValueComparator",
+        "accept": "interface{}"
+      },
+      "variant": {
+        "go": "Variant",
+        "accept": "interface{}"
+      },
+      "width": {
+        "go": "Width",
+        "accept": "interface{}"
+      }
+    }
   },
   "v-selection-control": {
     "go": "VSelectionControl",
@@ -11339,7 +12195,36 @@
   "v-table": {
     "go": "VTable",
     "accept": "...h.HTMLComponent",
-    "attrs": {}
+    "attrs": {
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "fixed-footer": {
+        "go": "FixedFooter",
+        "accept": "bool"
+      },
+      "fixed-header": {
+        "go": "FixedHeader",
+        "accept": "bool"
+      },
+      "height": {
+        "go": "Height",
+        "accept": "interface{}"
+      },
+      "hover": {
+        "go": "Hover",
+        "accept": "bool"
+      },
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      }
+    }
   },
   "v-tabs": {
     "go": "VTabs",
@@ -12474,7 +13359,16 @@
   "v-toolbar-title": {
     "go": "VToolbarTitle",
     "accept": "none",
-    "attrs": {}
+    "attrs": {
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "text": {
+        "go": "Text",
+        "accept": "string"
+      }
+    }
   },
   "v-tooltip": {
     "go": "VTooltip",

@@ -1,8 +1,415 @@
 {
+  "card": {
+    "go": "Card",
+    "accept": "none",
+    "attrs": {
+      "actions": {
+        "go": "Actions",
+        "accept": "string"
+      },
+      "header": {
+        "go": "Header",
+        "accept": "string"
+      },
+      "header-title": {
+        "go": "HeaderTitle",
+        "accept": "string"
+      },
+      "system-bar": {
+        "go": "SystemBar",
+        "accept": "string"
+      },
+      "variant": {
+        "go": "Variant",
+        "accept": "string"
+      }
+    }
+  },
+  "data-table": {
+    "go": "DataTable",
+    "accept": "none",
+    "attrs": {
+      "cell-wrapper-func": {
+        "go": "CellWrapperFunc",
+        "accept": "CellWrapperFunc"
+      },
+      "clear-selection-label": {
+        "go": "ClearSelectionLabel",
+        "accept": "string"
+      },
+      "column": {
+        "go": "Column",
+        "accept": "string"
+      },
+      "data": {
+        "go": "Data",
+        "accept": "interface{}"
+      },
+      "head-cell-wrapper-func": {
+        "go": "HeadCellWrapperFunc",
+        "accept": "HeadCellWrapperFunc"
+      },
+      "hover": {
+        "go": "Hover",
+        "accept": "bool"
+      },
+      "hover-class": {
+        "go": "HoverClass",
+        "accept": "string"
+      },
+      "load-more-at": {
+        "go": "LoadMoreAt",
+        "accept": "int"
+      },
+      "load-more-u-r-l": {
+        "go": "LoadMoreURL",
+        "accept": "string"
+      },
+      "on-selection-changed": {
+        "go": "OnSelectionChanged",
+        "accept": "string"
+      },
+      "row-expand-func": {
+        "go": "RowExpandFunc",
+        "accept": "RowComponentFunc"
+      },
+      "row-menu-head": {
+        "go": "RowMenuHead",
+        "accept": "h.HTMLComponent"
+      },
+      "row-menu-item-func": {
+        "go": "RowMenuItemFunc",
+        "accept": "RowMenuItemFunc"
+      },
+      "row-menu-item-funcs": {
+        "go": "RowMenuItemFuncs",
+        "accept": "string"
+      },
+      "row-wrapper-func": {
+        "go": "RowWrapperFunc",
+        "accept": "RowWrapperFunc"
+      },
+      "selected-count-label": {
+        "go": "SelectedCountLabel",
+        "accept": "string"
+      },
+      "selected-ids": {
+        "go": "SelectedIds",
+        "accept": "[]string"
+      },
+      "tfoot": {
+        "go": "Tfoot",
+        "accept": "string"
+      },
+      "without-header": {
+        "go": "WithoutHeader",
+        "accept": "bool"
+      }
+    }
+  },
+  "data-table-column": {
+    "go": "DataTableColumn",
+    "accept": "none",
+    "attrs": {
+      "cell-component-func": {
+        "go": "CellComponentFunc",
+        "accept": "CellComponentFunc"
+      },
+      "name": {
+        "go": "Name",
+        "accept": "string"
+      },
+      "title": {
+        "go": "Title",
+        "accept": "string"
+      }
+    }
+  },
+  "detail-column": {
+    "go": "DetailColumn",
+    "accept": "none",
+    "attrs": {
+      "append": {
+        "go": "Append",
+        "accept": "string"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "string"
+      },
+      "header": {
+        "go": "Header",
+        "accept": "string"
+      }
+    }
+  },
+  "detail-field": {
+    "go": "DetailField",
+    "accept": "none",
+    "attrs": {
+      "icon": {
+        "go": "Icon",
+        "accept": "h.HTMLComponent"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "label-min-width": {
+        "go": "LabelMinWidth",
+        "accept": "string"
+      }
+    }
+  },
+  "detail-info": {
+    "go": "DetailInfo",
+    "accept": "none",
+    "attrs": {}
+  },
+  "key-field": {
+    "go": "KeyField",
+    "accept": "none",
+    "attrs": {
+      "icon": {
+        "go": "Icon",
+        "accept": "h.HTMLComponent"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      }
+    }
+  },
+  "key-info": {
+    "go": "KeyInfo",
+    "accept": "none",
+    "attrs": {
+      "append": {
+        "go": "Append",
+        "accept": "string"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "string"
+      }
+    }
+  },
+  "optional-text": {
+    "go": "OptionalText",
+    "accept": "none",
+    "attrs": {
+      "zero-label": {
+        "go": "ZeroLabel",
+        "accept": "string"
+      }
+    }
+  },
+  "picker": {
+    "go": "Picker",
+    "accept": "none",
+    "attrs": {
+      "field-name": {
+        "go": "FieldName",
+        "accept": "string"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
+      }
+    }
+  },
+  "v-x-datepicker": {
+    "go": "VXDatepicker",
+    "accept": "none",
+    "attrs": {
+      "clear-text": {
+        "go": "ClearText",
+        "accept": "string"
+      },
+      "date-format": {
+        "go": "DateFormat",
+        "accept": "string"
+      },
+      "date-picker-props": {
+        "go": "DatePickerProps",
+        "accept": "DatePickerProps"
+      },
+      "dialog-width": {
+        "go": "DialogWidth",
+        "accept": "string"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
+      "hide-details": {
+        "go": "HideDetails",
+        "accept": "bool"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "ok-text": {
+        "go": "OkText",
+        "accept": "string"
+      },
+      "time-format": {
+        "go": "TimeFormat",
+        "accept": "string"
+      },
+      "time-picker-props": {
+        "go": "TimePickerProps",
+        "accept": "TimePickerProps"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "string"
+      }
+    }
+  },
+  "v-x-readonly-field": {
+    "go": "VXReadonlyField",
+    "accept": "none",
+    "attrs": {
+      "checkbox": {
+        "go": "Checkbox",
+        "accept": "bool"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
+      }
+    }
+  },
+  "v-x-table-pagination": {
+    "go": "VXTablePagination",
+    "accept": "none",
+    "attrs": {
+      "curr-page": {
+        "go": "CurrPage",
+        "accept": "int64"
+      },
+      "custom-per-pages": {
+        "go": "CustomPerPages",
+        "accept": "[]int64"
+      },
+      "no-offset-part": {
+        "go": "NoOffsetPart",
+        "accept": "bool"
+      },
+      "no-per-page-part": {
+        "go": "NoPerPagePart",
+        "accept": "bool"
+      },
+      "on-select-page": {
+        "go": "OnSelectPage",
+        "accept": "string"
+      },
+      "on-select-per-page": {
+        "go": "OnSelectPerPage",
+        "accept": "string"
+      },
+      "per-page": {
+        "go": "PerPage",
+        "accept": "int64"
+      },
+      "per-page-text": {
+        "go": "PerPageText",
+        "accept": "string"
+      },
+      "total": {
+        "go": "Total",
+        "accept": "int64"
+      },
+      "total-visible": {
+        "go": "TotalVisible",
+        "accept": "int64"
+      }
+    }
+  },
+  "v-x-text-field": {
+    "go": "VXTextField",
+    "accept": "none",
+    "attrs": {
+      "dense": {
+        "go": "Dense",
+        "accept": "string"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "read-only": {
+        "go": "ReadOnly",
+        "accept": "bool"
+      },
+      "suffix": {
+        "go": "Suffix",
+        "accept": "string"
+      },
+      "text": {
+        "go": "Text",
+        "accept": "string"
+      },
+      "type": {
+        "go": "Type",
+        "accept": "string"
+      },
+      "v-field": {
+        "go": "VField",
+        "accept": "string"
+      }
+    }
+  },
   "vx-autocomplete": {
     "go": "VXAutocomplete",
     "accept": "...h.HTMLComponent",
     "attrs": {
+      "allow-overflow": {
+        "go": "AllowOverflow",
+        "accept": "bool"
+      },
+      "append-icon": {
+        "go": "AppendIcon",
+        "accept": "string"
+      },
+      "append-outer-icon": {
+        "go": "AppendOuterIcon",
+        "accept": "string"
+      },
+      "attach": {
+        "go": "Attach",
+        "accept": "interface{}"
+      },
+      "auto-select-first": {
+        "go": "AutoSelectFirst",
+        "accept": "bool"
+      },
+      "autofocus": {
+        "go": "Autofocus",
+        "accept": "bool"
+      },
+      "background-color": {
+        "go": "BackgroundColor",
+        "accept": "string"
+      },
+      "cache-items": {
+        "go": "CacheItems",
+        "accept": "bool"
+      },
       "chip-color": {
         "go": "ChipColor",
         "accept": "string"
@@ -11,21 +418,133 @@
         "go": "ChipTextColor",
         "accept": "string"
       },
+      "chips": {
+        "go": "Chips",
+        "accept": "bool"
+      },
+      "clear-icon": {
+        "go": "ClearIcon",
+        "accept": "string"
+      },
+      "clearable": {
+        "go": "Clearable",
+        "accept": "bool"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "counter": {
+        "go": "Counter",
+        "accept": "int"
+      },
+      "counter-value": {
+        "go": "CounterValue",
+        "accept": "interface{}"
+      },
       "current-field": {
         "go": "CurrentField",
         "accept": "string"
+      },
+      "dark": {
+        "go": "Dark",
+        "accept": "bool"
+      },
+      "deletable-chips": {
+        "go": "DeletableChips",
+        "accept": "bool"
+      },
+      "dense": {
+        "go": "Dense",
+        "accept": "bool"
       },
       "density": {
         "go": "Density",
         "accept": "string"
       },
+      "disable-lookup": {
+        "go": "DisableLookup",
+        "accept": "bool"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "eager": {
+        "go": "Eager",
+        "accept": "bool"
+      },
+      "error": {
+        "go": "Error",
+        "accept": "bool"
+      },
+      "error-count": {
+        "go": "ErrorCount",
+        "accept": "int"
+      },
       "error-messages": {
         "go": "ErrorMessages",
         "accept": "string"
       },
+      "filled": {
+        "go": "Filled",
+        "accept": "bool"
+      },
+      "filter": {
+        "go": "Filter",
+        "accept": "interface{}"
+      },
+      "flat": {
+        "go": "Flat",
+        "accept": "bool"
+      },
+      "full-width": {
+        "go": "FullWidth",
+        "accept": "bool"
+      },
       "has-icon": {
         "go": "HasIcon",
         "accept": "bool"
+      },
+      "height": {
+        "go": "Height",
+        "accept": "int"
+      },
+      "hide-details": {
+        "go": "HideDetails",
+        "accept": "bool"
+      },
+      "hide-no-data": {
+        "go": "HideNoData",
+        "accept": "bool"
+      },
+      "hide-selected": {
+        "go": "HideSelected",
+        "accept": "bool"
+      },
+      "hint": {
+        "go": "Hint",
+        "accept": "string"
+      },
+      "id": {
+        "go": "Id",
+        "accept": "string"
+      },
+      "item-color": {
+        "go": "ItemColor",
+        "accept": "string"
+      },
+      "item-disabled": {
+        "go": "ItemDisabled",
+        "accept": "string"
+      },
+      "item-title": {
+        "go": "ItemTitle",
+        "accept": "string"
+      },
+      "item-value": {
+        "go": "ItemValue",
+        "accept": "string"
       },
       "items": {
         "go": "Items",
@@ -34,6 +553,50 @@
       "items-field": {
         "go": "ItemsField",
         "accept": "string"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "light": {
+        "go": "Light",
+        "accept": "bool"
+      },
+      "loader-height": {
+        "go": "LoaderHeight",
+        "accept": "int"
+      },
+      "loading": {
+        "go": "Loading",
+        "accept": "bool"
+      },
+      "menu-props": {
+        "go": "MenuProps",
+        "accept": "interface{}"
+      },
+      "messages": {
+        "go": "Messages",
+        "accept": "string"
+      },
+      "multiple": {
+        "go": "Multiple",
+        "accept": "bool"
+      },
+      "no-data-text": {
+        "go": "NoDataText",
+        "accept": "string"
+      },
+      "no-filter": {
+        "go": "NoFilter",
+        "accept": "bool"
+      },
+      "open-on-clear": {
+        "go": "OpenOnClear",
+        "accept": "bool"
+      },
+      "outlined": {
+        "go": "Outlined",
+        "accept": "bool"
       },
       "page": {
         "go": "Page",
@@ -55,8 +618,56 @@
         "go": "PagesField",
         "accept": "string"
       },
+      "persistent-hint": {
+        "go": "PersistentHint",
+        "accept": "bool"
+      },
+      "persistent-placeholder": {
+        "go": "PersistentPlaceholder",
+        "accept": "bool"
+      },
+      "placeholder": {
+        "go": "Placeholder",
+        "accept": "string"
+      },
+      "prefix": {
+        "go": "Prefix",
+        "accept": "string"
+      },
+      "prepend-icon": {
+        "go": "PrependIcon",
+        "accept": "string"
+      },
+      "prepend-inner-icon": {
+        "go": "PrependInnerIcon",
+        "accept": "string"
+      },
+      "readonly": {
+        "go": "Readonly",
+        "accept": "bool"
+      },
+      "return-object": {
+        "go": "ReturnObject",
+        "accept": "bool"
+      },
+      "reverse": {
+        "go": "Reverse",
+        "accept": "bool"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "bool"
+      },
+      "rules": {
+        "go": "Rules",
+        "accept": "interface{}"
+      },
       "search-field": {
         "go": "SearchField",
+        "accept": "string"
+      },
+      "search-input": {
+        "go": "SearchInput",
         "accept": "string"
       },
       "selected-items": {
@@ -67,13 +678,61 @@
         "go": "SetDataSource",
         "accept": "string"
       },
+      "shaped": {
+        "go": "Shaped",
+        "accept": "bool"
+      },
+      "single-line": {
+        "go": "SingleLine",
+        "accept": "bool"
+      },
+      "small-chips": {
+        "go": "SmallChips",
+        "accept": "bool"
+      },
+      "solo": {
+        "go": "Solo",
+        "accept": "bool"
+      },
+      "solo-inverted": {
+        "go": "SoloInverted",
+        "accept": "bool"
+      },
       "sorting": {
         "go": "Sorting",
         "accept": "bool"
       },
+      "success": {
+        "go": "Success",
+        "accept": "bool"
+      },
+      "success-messages": {
+        "go": "SuccessMessages",
+        "accept": "string"
+      },
+      "suffix": {
+        "go": "Suffix",
+        "accept": "string"
+      },
       "total-field": {
         "go": "TotalField",
         "accept": "string"
+      },
+      "type": {
+        "go": "Type",
+        "accept": "string"
+      },
+      "validate-on-blur": {
+        "go": "ValidateOnBlur",
+        "accept": "bool"
+      },
+      "value": {
+        "go": "Value",
+        "accept": "interface{}"
+      },
+      "value-comparator": {
+        "go": "ValueComparator",
+        "accept": "interface{}"
       },
       "variant": {
         "go": "Variant",
@@ -103,6 +762,60 @@
       }
     }
   },
+  "vx-breadcrumbs": {
+    "go": "VXBreadcrumbs",
+    "accept": "...h.HTMLComponent",
+    "attrs": {
+      "active-class": {
+        "go": "ActiveClass",
+        "accept": "string"
+      },
+      "active-color": {
+        "go": "ActiveColor",
+        "accept": "string"
+      },
+      "bg-color": {
+        "go": "BgColor",
+        "accept": "string"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "divider": {
+        "go": "Divider",
+        "accept": "string"
+      },
+      "icon": {
+        "go": "Icon",
+        "accept": "interface{}"
+      },
+      "items": {
+        "go": "Items",
+        "accept": "interface{}"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "interface{}"
+      },
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "tile": {
+        "go": "Tile",
+        "accept": "bool"
+      }
+    }
+  },
   "vx-btn": {
     "go": "VXBtn",
     "accept": "none",
@@ -113,10 +826,6 @@
       },
       "append-icon": {
         "go": "AppendIcon",
-        "accept": "interface{}"
-      },
-      "attr-if": {
-        "go": "AttrIf",
         "accept": "interface{}"
       },
       "base-color": {
@@ -332,6 +1041,24 @@
       "variant": {
         "go": "Variant",
         "accept": "interface{}"
+      }
+    }
+  },
+  "vx-chart": {
+    "go": "VXChart",
+    "accept": "none",
+    "attrs": {
+      "on-click": {
+        "go": "OnClick",
+        "accept": "string"
+      },
+      "options": {
+        "go": "Options",
+        "accept": "interface{}"
+      },
+      "presets": {
+        "go": "Presets",
+        "accept": "string"
       }
     }
   },
@@ -679,7 +1406,68 @@
   "vx-datepicker": {
     "go": "VXDatePicker",
     "accept": "none",
-    "attrs": {}
+    "attrs": {
+      "clearable": {
+        "go": "Clearable",
+        "accept": "bool"
+      },
+      "date-picker-props": {
+        "go": "DatePickerProps",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "error-messages": {
+        "go": "ErrorMessages",
+        "accept": "string"
+      },
+      "format": {
+        "go": "Format",
+        "accept": "string"
+      },
+      "hide-details": {
+        "go": "HideDetails",
+        "accept": "bool"
+      },
+      "id": {
+        "go": "Id",
+        "accept": "string"
+      },
+      "label": {
+        "go": "Label",
+        "accept": "string"
+      },
+      "model-value": {
+        "go": "ModelValue",
+        "accept": "interface{}"
+      },
+      "name": {
+        "go": "Name",
+        "accept": "string"
+      },
+      "placeholder": {
+        "go": "Placeholder",
+        "accept": "string"
+      },
+      "required": {
+        "go": "Required",
+        "accept": "bool"
+      },
+      "tips": {
+        "go": "Tips",
+        "accept": "string"
+      },
+      "type": {
+        "go": "Type",
+        "accept": "string"
+      },
+      "width": {
+        "go": "Width",
+        "accept": "int"
+      }
+    }
   },
   "vx-datetimepicker": {
     "go": "VXDateTimePicker",
@@ -1247,6 +2035,16 @@
       }
     }
   },
+  "vx-segment-form": {
+    "go": "VXSegmentForm",
+    "accept": "none",
+    "attrs": {
+      "options": {
+        "go": "Options",
+        "accept": "interface{}"
+      }
+    }
+  },
   "vx-select": {
     "go": "VXSelect",
     "accept": "...h.HTMLComponent",
@@ -1506,6 +2304,212 @@
       "text": {
         "go": "Text",
         "accept": "string"
+      }
+    }
+  },
+  "vx-treeview": {
+    "go": "VXTreeview",
+    "accept": "...h.HTMLComponent",
+    "attrs": {
+      "activatable": {
+        "go": "Activatable",
+        "accept": "bool"
+      },
+      "activated": {
+        "go": "Activated",
+        "accept": "interface{}"
+      },
+      "active-class": {
+        "go": "ActiveClass",
+        "accept": "string"
+      },
+      "active-color": {
+        "go": "ActiveColor",
+        "accept": "string"
+      },
+      "active-strategy": {
+        "go": "ActiveStrategy",
+        "accept": "interface{}"
+      },
+      "base-color": {
+        "go": "BaseColor",
+        "accept": "string"
+      },
+      "bg-color": {
+        "go": "BgColor",
+        "accept": "string"
+      },
+      "border": {
+        "go": "Border",
+        "accept": "interface{}"
+      },
+      "collapse-icon": {
+        "go": "CollapseIcon",
+        "accept": "string"
+      },
+      "color": {
+        "go": "Color",
+        "accept": "string"
+      },
+      "custom-filter": {
+        "go": "CustomFilter",
+        "accept": "interface{}"
+      },
+      "custom-key-filter": {
+        "go": "CustomKeyFilter",
+        "accept": "interface{}"
+      },
+      "density": {
+        "go": "Density",
+        "accept": "interface{}"
+      },
+      "disabled": {
+        "go": "Disabled",
+        "accept": "bool"
+      },
+      "elevation": {
+        "go": "Elevation",
+        "accept": "interface{}"
+      },
+      "expand-icon": {
+        "go": "ExpandIcon",
+        "accept": "string"
+      },
+      "filter-keys": {
+        "go": "FilterKeys",
+        "accept": "interface{}"
+      },
+      "filter-mode": {
+        "go": "FilterMode",
+        "accept": "interface{}"
+      },
+      "height": {
+        "go": "Height",
+        "accept": "interface{}"
+      },
+      "item-children": {
+        "go": "ItemChildren",
+        "accept": "interface{}"
+      },
+      "item-props": {
+        "go": "ItemProps",
+        "accept": "interface{}"
+      },
+      "item-title": {
+        "go": "ItemTitle",
+        "accept": "interface{}"
+      },
+      "item-type": {
+        "go": "ItemType",
+        "accept": "string"
+      },
+      "item-value": {
+        "go": "ItemValue",
+        "accept": "interface{}"
+      },
+      "items": {
+        "go": "Items",
+        "accept": "interface{}"
+      },
+      "lines": {
+        "go": "Lines",
+        "accept": "interface{}"
+      },
+      "load-children": {
+        "go": "LoadChildren",
+        "accept": "interface{}"
+      },
+      "loading-icon": {
+        "go": "LoadingIcon",
+        "accept": "string"
+      },
+      "mandatory": {
+        "go": "Mandatory",
+        "accept": "bool"
+      },
+      "max-height": {
+        "go": "MaxHeight",
+        "accept": "interface{}"
+      },
+      "max-width": {
+        "go": "MaxWidth",
+        "accept": "interface{}"
+      },
+      "min-height": {
+        "go": "MinHeight",
+        "accept": "interface{}"
+      },
+      "min-width": {
+        "go": "MinWidth",
+        "accept": "interface{}"
+      },
+      "no-filter": {
+        "go": "NoFilter",
+        "accept": "bool"
+      },
+      "open-all": {
+        "go": "OpenAll",
+        "accept": "bool"
+      },
+      "open-strategy": {
+        "go": "OpenStrategy",
+        "accept": "interface{}"
+      },
+      "opened": {
+        "go": "Opened",
+        "accept": "interface{}"
+      },
+      "return-object": {
+        "go": "ReturnObject",
+        "accept": "bool"
+      },
+      "rounded": {
+        "go": "Rounded",
+        "accept": "interface{}"
+      },
+      "search": {
+        "go": "Search",
+        "accept": "string"
+      },
+      "select-strategy": {
+        "go": "SelectStrategy",
+        "accept": "interface{}"
+      },
+      "selectable": {
+        "go": "Selectable",
+        "accept": "bool"
+      },
+      "selected": {
+        "go": "Selected",
+        "accept": "interface{}"
+      },
+      "slim": {
+        "go": "Slim",
+        "accept": "bool"
+      },
+      "tag": {
+        "go": "Tag",
+        "accept": "string"
+      },
+      "theme": {
+        "go": "Theme",
+        "accept": "string"
+      },
+      "tile": {
+        "go": "Tile",
+        "accept": "bool"
+      },
+      "value-comparator": {
+        "go": "ValueComparator",
+        "accept": "interface{}"
+      },
+      "variant": {
+        "go": "Variant",
+        "accept": "interface{}"
+      },
+      "width": {
+        "go": "Width",
+        "accept": "interface{}"
       }
     }
   }

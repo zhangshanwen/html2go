@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"path/filepath"
 	"strings"
 )
 
@@ -24,71 +25,175 @@ type ComponentInfo struct {
 // ComponentMap 是主映射结构
 type ComponentMap map[string]ComponentInfo
 
-// ParseGoFile 解析单个 Go 文件并提取组件信息
-func ParseGoFile(filePath string) (ComponentMap, error) {
+// ParseGoFiles 解析多个 Go 文件并提取组件信息
+func ParseGoFiles(filePaths []string) (ComponentMap, error) {
 	// 创建组件映射
 	componentMap := make(ComponentMap)
 
-	// 解析 Go 文件
-	fset := token.NewFileSet()
-	node, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing %s: %v", filePath, err)
-	}
+	// 遍历所有文件
+	for _, filePath := range filePaths {
+		// 解析 Go 文件
+		fset := token.NewFileSet()
+		node, err := parser.ParseFile(fset, filePath, nil, parser.ParseComments)
+		if err != nil {
+			return nil, fmt.Errorf("error parsing %s: %v", filePath, err)
+		}
 
-	// 提取组件信息
-	ExtractComponentInfo(node, componentMap)
+		// 提取组件信息
+		ExtractComponentInfo(node, componentMap)
+	}
 
 	return componentMap, nil
 }
 
+// ParseGoFile 解析单个 Go 文件并提取组件信息 (保留向后兼容性)
+func ParseGoFile(filePath string) (ComponentMap, error) {
+	return ParseGoFiles([]string{filePath})
+}
+
+// ParseGoDir 解析目录中的所有 Go 文件并提取组件信息
+func ParseGoDir(dirPath string) (ComponentMap, error) {
+	// 查找所有 Go 文件
+	matches, err := filepath.Glob(filepath.Join(dirPath, "*.go"))
+	if err != nil {
+		return nil, fmt.Errorf("error finding Go files in %s: %v", dirPath, err)
+	}
+
+	if len(matches) == 0 {
+		// If no Go files are found, return an empty component map instead of an error
+		return make(ComponentMap), nil
+	}
+
+	return ParseGoFiles(matches)
+}
+
 // ExtractComponentInfo 从 AST 节点提取组件信息
 func ExtractComponentInfo(node *ast.File, componentMap ComponentMap) {
+	// 首先查找所有类型定义，确保记录所有构建器类型
+	builderTypes := make(map[string]bool)
 	for _, decl := range node.Decls {
-		// 查找函数声明（组件构造函数）
-		if funcDecl, ok := decl.(*ast.FuncDecl); ok {
-			// 跳过方法（它们有接收器）
-			if funcDecl.Recv != nil {
-				continue
-			}
-
-			// 检查这是否是组件构造函数（以 V 开头并返回构建器）
-			funcName := funcDecl.Name.Name
-			if !strings.HasPrefix(funcName, "V") {
-				continue
-			}
-
-			// 从函数体中提取标签名
-			tagName := ExtractTagName(funcDecl)
-			if tagName == "" {
-				continue
-			}
-
-			// 创建组件信息条目
-			componentMap[tagName] = ComponentInfo{
-				Go:     funcName,
-				Accept: ExtractAcceptType(funcDecl),
-				Attrs:  make(map[string]AttrInfo),
-			}
-
-			// 查找构建器结构及其方法
-			builderName := funcName + "Builder"
-			for _, d := range node.Decls {
-				if genDecl, ok := d.(*ast.GenDecl); ok {
-					for _, spec := range genDecl.Specs {
-						if typeSpec, ok := spec.(*ast.TypeSpec); ok && typeSpec.Name.Name == builderName {
-							// 创建临时变量来存储组件信息
-							info := componentMap[tagName]
-							// 找到构建器结构，现在查找其方法
-							findBuilderMethods(node, builderName, &info)
-							// 将修改后的信息放回映射
-							componentMap[tagName] = info
-							break
-						}
+		if genDecl, ok := decl.(*ast.GenDecl); ok {
+			for _, spec := range genDecl.Specs {
+				if typeSpec, ok := spec.(*ast.TypeSpec); ok {
+					if strings.HasSuffix(typeSpec.Name.Name, "Builder") {
+						builderTypes[typeSpec.Name.Name] = true
 					}
 				}
 			}
 		}
+	}
+
+	// 然后寻找构造函数和方法
+	for _, decl := range node.Decls {
+		// 查找函数声明（组件构造函数）
+		if funcDecl, ok := decl.(*ast.FuncDecl); ok {
+			// 处理组件构造函数
+			if funcDecl.Recv == nil {
+				// 检查这是否是组件构造函数（以 V 开头并返回构建器）
+				funcName := funcDecl.Name.Name
+				if !strings.HasPrefix(funcName, "V") {
+					continue
+				}
+
+				// 从函数体中提取标签名
+				tagName := ExtractTagName(funcDecl)
+				if tagName == "" {
+					continue
+				}
+
+				// 创建组件信息条目或使用已存在的
+				info, exists := componentMap[tagName]
+				if !exists {
+					info = ComponentInfo{
+						Go:     funcName,
+						Accept: ExtractAcceptType(funcDecl),
+						Attrs:  make(map[string]AttrInfo),
+					}
+				}
+
+				// 将信息放回映射
+				componentMap[tagName] = info
+			} else if funcDecl.Recv != nil && len(funcDecl.Recv.List) > 0 {
+				// 处理构建器方法
+				// 获取接收者类型
+				receiverType := ""
+				if starExpr, ok := funcDecl.Recv.List[0].Type.(*ast.StarExpr); ok {
+					if ident, ok := starExpr.X.(*ast.Ident); ok {
+						receiverType = ident.Name
+					}
+				}
+
+				// 检查接收者类型是否是构建器
+				if strings.HasSuffix(receiverType, "Builder") {
+					methodName := funcDecl.Name.Name
+
+					// 跳过通用方法
+					if isCommonMethod(methodName) {
+						continue
+					}
+
+					// 将方法名转换为属性名
+					attrName := camelToKebab(methodName)
+
+					// 提取参数类型
+					paramType := extractParamType(funcDecl)
+
+					// 首先检查这个构建器是否已经有关联的组件
+					found := false
+					for tagName, info := range componentMap {
+						// 检查构建器名称是否匹配（VBtn -> VBtnBuilder）
+						builderName := info.Go + "Builder"
+						if builderName == receiverType {
+							// 添加到属性
+							info.Attrs[attrName] = AttrInfo{
+								Go:     methodName,
+								Accept: paramType,
+							}
+
+							// 更新组件信息
+							componentMap[tagName] = info
+							found = true
+							break
+						}
+					}
+
+					// 如果没有找到对应的组件，但我们知道这是一个构建器，
+					// 则存储该方法以备后用（可能组件构造函数在另一个文件中）
+					if !found && builderTypes[receiverType] {
+						// 尝试从构建器名称推导组件名
+						componentName := strings.TrimSuffix(receiverType, "Builder")
+						// 尝试从组件名称推导标签名
+						tagName := camelToKebab(componentName)
+
+						// 检查是否已存在该组件
+						info, exists := componentMap[tagName]
+						if !exists {
+							// 创建新的组件条目
+							info = ComponentInfo{
+								Go:     componentName,
+								Accept: "none", // 暂时设置为无，可能在后续文件解析中更新
+								Attrs:  make(map[string]AttrInfo),
+							}
+						}
+
+						// 添加属性
+						info.Attrs[attrName] = AttrInfo{
+							Go:     methodName,
+							Accept: paramType,
+						}
+
+						// 更新组件映射
+						componentMap[tagName] = info
+					}
+				}
+			}
+		}
+	}
+
+	// 查找所有构建器类型的方法
+	for receiverType := range builderTypes {
+		componentName := strings.TrimSuffix(receiverType, "Builder")
+		findBuilderMethods(node, receiverType, componentName, componentMap)
 	}
 }
 
@@ -220,7 +325,33 @@ func ExtractAcceptType(funcDecl *ast.FuncDecl) string {
 }
 
 // findBuilderMethods 查找构建器结构的所有方法
-func findBuilderMethods(node *ast.File, builderName string, componentInfo *ComponentInfo) {
+func findBuilderMethods(node *ast.File, builderName string, componentName string, componentMap ComponentMap) {
+	// 寻找对应的组件
+	var componentInfo *ComponentInfo
+	var tagName string
+
+	// 首先尝试通过组件名查找
+	for t, info := range componentMap {
+		if info.Go == componentName {
+			componentInfo = &info
+			tagName = t
+			break
+		}
+	}
+
+	// 如果没有找到，尝试通过标签名推导
+	if componentInfo == nil {
+		tagName = camelToKebab(componentName)
+		// 默认创建一个新组件
+		componentInfo = &ComponentInfo{
+			Go:     componentName,
+			Accept: "none", // 可能会在后续文件解析中更新
+			Attrs:  make(map[string]AttrInfo),
+		}
+		componentMap[tagName] = *componentInfo
+	}
+
+	// 查找该构建器的所有方法
 	for _, decl := range node.Decls {
 		if funcDecl, ok := decl.(*ast.FuncDecl); ok {
 			// 检查这是否是构建器结构的方法
@@ -242,10 +373,12 @@ func findBuilderMethods(node *ast.File, builderName string, componentInfo *Compo
 						paramType := extractParamType(funcDecl)
 
 						// 添加到属性
-						componentInfo.Attrs[attrName] = AttrInfo{
+						info := componentMap[tagName]
+						info.Attrs[attrName] = AttrInfo{
 							Go:     methodName,
 							Accept: paramType,
 						}
+						componentMap[tagName] = info
 					}
 				}
 			}
@@ -266,6 +399,7 @@ func isCommonMethod(name string) bool {
 		"On":              true,
 		"Bind":            true,
 		"MarshalHTML":     true,
+		"AttrIf":          true, // Added AttrIf as a common method
 	}
 
 	return commonMethods[name]

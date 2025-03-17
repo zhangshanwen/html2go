@@ -20,9 +20,7 @@ var UnmappedComponentTestCases = []HTMLGoTestCase{
 var n = Body(
 	Div(
 		CustomComponent(
-			Span(
-				Text("Child content"),
-			),
+			Span("Child content"),
 		).Attr("prop1", "value1").
 			Attr("prop2", "value2"),
 	),
