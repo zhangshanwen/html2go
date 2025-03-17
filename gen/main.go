@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/sunfmin/html2go/gen/transform" // Import the transform package
+	"github.com/zhangshanwen/html2go/gen/transform" // Import the transform package
 )
 
 // AttrInfo represents information about a component attribute

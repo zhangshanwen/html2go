@@ -1,4 +1,4 @@
-module github.com/sunfmin/html2go
+module github.com/zhangshanwen/html2go
 
 go 1.22.5
 

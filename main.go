@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sunfmin/html2go/parse"
+	"github.com/zhangshanwen/html2go/parse"
 )
 
 var pkg = flag.String("pkg", "", "generated htmlgo pkg name")

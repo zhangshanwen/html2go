@@ -3,7 +3,7 @@
 Install
 
 ```bash
-$ go get github.com/sunfmin/html2go
+$ go get github.com/zhangshanwen/html2go
 ```
 
 Run 

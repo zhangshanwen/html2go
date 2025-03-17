@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/sunfmin/html2go/parse"
+	"github.com/zhangshanwen/html2go/parse"
 	"github.com/theplant/testingutils"
 )
 

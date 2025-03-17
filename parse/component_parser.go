@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sunfmin/html2go/embed"
+	"github.com/zhangshanwen/html2go/embed"
 )
 
 // AttributeDefinition 表示组件属性的定义

@@ -3,7 +3,7 @@ package integration
 import (
 	"testing"
 
-	"github.com/sunfmin/html2go/parse"
+	"github.com/zhangshanwen/html2go/parse"
 )
 
 func TestParseComponentData(t *testing.T) {
