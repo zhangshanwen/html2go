@@ -12,6 +12,8 @@ import (
 type HTMLGoTestCase struct {
 	Name         string
 	Pkg          string
+	VuetifyPkg   string
+	VuetifyxPkg  string
 	ChildrenMode bool
 	HTML         string
 	GoCode       string
@@ -22,7 +24,7 @@ func RunHTMLGoTestCase(t *testing.T, tc HTMLGoTestCase) {
 	t.Helper()
 
 	// Convert HTML to Go code
-	gocode := parse.GenerateHTMLGo(tc.Pkg, tc.ChildrenMode, strings.NewReader(
+	gocode := parse.GenerateHTMLGo(tc.Pkg, tc.VuetifyPkg, tc.VuetifyxPkg, tc.ChildrenMode, strings.NewReader(
 		strings.ReplaceAll(tc.HTML, "|backquote|", "`"),
 	))
 

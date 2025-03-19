@@ -20,7 +20,7 @@ import (
 // 定义全局变量来存储组件定义
 var componentDefinitions map[string]ComponentDefinition
 
-func GenerateHTMLGo(pkg string, childrenMode bool, htmlCode io.Reader) string {
+func GenerateHTMLGo(pkg string, vuetifyPkg string, vuetifyxPkg string, childrenMode bool, htmlCode io.Reader) string {
 	// 尝试加载组件定义数据
 	if componentDefinitions == nil {
 		var err error
@@ -40,7 +40,7 @@ func GenerateHTMLGo(pkg string, childrenMode bool, htmlCode io.Reader) string {
 	fc := &funcCall{}
 	walk(n.FirstChild.FirstChild.NextSibling, fc, methodNames)
 
-	code := string(fc.MarshalCode(methodNames, pkg, childrenMode))
+	code := string(fc.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 	code = strings.TrimRight(code, ",\n")
 
 	fset := token.NewFileSet()
@@ -90,7 +90,7 @@ type funcCall struct {
 	ComponentDef ComponentDefinition // 存储组件定义
 }
 
-func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode bool) (r []byte) {
+func (fc *funcCall) MarshalCode(methodNames []string, pkg string, vuetifyPkg string, vuetifyxPkg string, childrenMode bool) (r []byte) {
 	buf := bytes.NewBuffer(nil)
 
 	if len(fc.Text) > 0 {
@@ -105,8 +105,16 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 
 	// 处理组件或普通HTML标签
 	if fc.IsComponent {
+		// 根据组件类型选择包前缀
+		usePkg := pkg
+		if fc.ComponentDef.Type == "vuetify" && vuetifyPkg != "" {
+			usePkg = vuetifyPkg
+		} else if fc.ComponentDef.Type == "vuetifyx" && vuetifyxPkg != "" {
+			usePkg = vuetifyxPkg
+		}
+
 		// 处理已知组件
-		_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(pkg), fc.ComponentDef.Go, newline)
+		_, _ = fmt.Fprintf(buf, "%s%s(%s", pkgDot(usePkg), fc.ComponentDef.Go, newline)
 
 		// 处理子元素
 		if !childrenMode {
@@ -116,7 +124,7 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 				buf.WriteString(`""`)
 			} else {
 				for _, c := range fc.Children {
-					buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+					buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 				}
 			}
 		}
@@ -166,15 +174,15 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 			} else {
 				buf.WriteString("\n")
 				for _, c := range fc.Children {
-					buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+					buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 				}
 			}
 			buf.WriteString(")")
 		}
 
 	} else if strings.Contains(fc.Name, "-") {
-		// 处理未知的组件（使用 h.Tag）
-		_, _ = fmt.Fprintf(buf, "%sh.Tag(%#v)", pkgDot(pkg), fc.Name)
+		// 处理未知的组件（使用 Tag 而不是硬编码的 h.Tag）
+		_, _ = fmt.Fprintf(buf, "%sTag(%#v)", pkgDot(pkg), fc.Name)
 
 		// 自定义组件和未知组件的处理方式区分
 		if childrenMode {
@@ -192,7 +200,7 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 			if len(fc.Children) > 0 {
 				buf.WriteString(".Children(\n")
 				for _, c := range fc.Children {
-					buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+					buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 				}
 				buf.WriteString(")")
 			}
@@ -201,7 +209,7 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 			if len(fc.Children) > 0 {
 				buf.WriteString(".Children(\n")
 				for _, c := range fc.Children {
-					buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+					buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 				}
 				buf.WriteString(")")
 			}
@@ -240,7 +248,7 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 				needWriteChildren = true
 			} else {
 				for _, c := range fc.Children {
-					buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+					buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 				}
 			}
 		}
@@ -277,7 +285,7 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, childrenMode b
 		if needWriteChildren && len(fc.Children) > 0 {
 			buf.WriteString(".Children(\n")
 			for _, c := range fc.Children {
-				buf.Write(c.MarshalCode(methodNames, pkg, childrenMode))
+				buf.Write(c.MarshalCode(methodNames, pkg, vuetifyPkg, vuetifyxPkg, childrenMode))
 			}
 			buf.WriteString(")")
 		}

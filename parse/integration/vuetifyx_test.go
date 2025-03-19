@@ -7,7 +7,8 @@ import (
 // VuetifyXTestCases contains test scenarios for VuetifyX components
 var VuetifyXTestCases = []HTMLGoTestCase{
 	{
-		Name: "vx-btn basic",
+		Name:        "vx-btn basic",
+		VuetifyxPkg: "vx",
 		HTML: `
 <div>
   <vx-btn text="Submit" color="primary" on-click="handleSubmit"></vx-btn>
@@ -17,7 +18,7 @@ var VuetifyXTestCases = []HTMLGoTestCase{
 
 var n = Body(
 	Div(
-		VXBtn().Text("Submit").
+		vx.VXBtn().Text("Submit").
 			Color("primary").
 			OnClick("handleSubmit"),
 	),
@@ -25,7 +26,8 @@ var n = Body(
 `,
 	},
 	{
-		Name: "vx-btn with boolean attributes",
+		Name:        "vx-btn with boolean attributes",
+		VuetifyxPkg: "vx",
 		HTML: `
 <div>
   <vx-btn text="Submit" disabled flat block></vx-btn>
@@ -35,7 +37,7 @@ var n = Body(
 
 var n = Body(
 	Div(
-		VXBtn().Text("Submit").
+		vx.VXBtn().Text("Submit").
 			Disabled(true).
 			Flat(true).
 			Block(true),
@@ -44,7 +46,8 @@ var n = Body(
 `,
 	},
 	{
-		Name: "vx-dialog with nested content",
+		Name:        "vx-dialog with nested content",
+		VuetifyxPkg: "vx",
 		HTML: `
 <vx-dialog title="Confirmation" persistent width="400" max-width="500">
   <p>Are you sure you want to delete this item?</p>
@@ -55,13 +58,13 @@ var n = Body(
 		GoCode: `package hello
 
 var n = Body(
-	VXDialog(
+	vx.VXDialog(
 		P(
 			Text("Are you sure you want to delete this item?"),
 		),
-		VXBtn().Text("Cancel").
+		vx.VXBtn().Text("Cancel").
 			Color("grey"),
-		VXBtn().Text("Delete").
+		vx.VXBtn().Text("Delete").
 			Color("red"),
 	).Title("Confirmation").
 		Persistent(true).
@@ -72,6 +75,7 @@ var n = Body(
 	},
 	{
 		Name:         "vx-dialog with children mode",
+		VuetifyxPkg:  "vx",
 		ChildrenMode: true,
 		HTML: `
 <vx-dialog title="Confirmation" persistent>
@@ -81,7 +85,7 @@ var n = Body(
 		GoCode: `package hello
 
 var n = Body().Children(
-	VXDialog().Title("Confirmation").
+	vx.VXDialog().Title("Confirmation").
 		Persistent(true).Children(
 		P().Children(
 			Text("Are you sure you want to delete this item?"),
@@ -91,7 +95,8 @@ var n = Body().Children(
 `,
 	},
 	{
-		Name: "vx-select with items",
+		Name:        "vx-select with items",
+		VuetifyxPkg: "vx",
 		HTML: `
 <vx-select label="Choose a country" clearable multiple required>
   <option value="us">United States</option>
@@ -102,7 +107,7 @@ var n = Body().Children(
 		GoCode: `package hello
 
 var n = Body(
-	VXSelect(
+	vx.VXSelect(
 		Option("United States").Value("us"),
 		Option("Canada").Value("ca"),
 		Option("Mexico").Value("mx"),
@@ -114,14 +119,15 @@ var n = Body(
 `,
 	},
 	{
-		Name: "vx-checkbox with attributes",
+		Name:        "vx-checkbox with attributes",
+		VuetifyxPkg: "vx",
 		HTML: `
 <vx-checkbox label="Accept terms" model-value="true" error-messages="You must accept the terms"></vx-checkbox>
 `,
 		GoCode: `package hello
 
 var n = Body(
-	VXCheckbox().Label("Accept terms").
+	vx.VXCheckbox().Label("Accept terms").
 		ModelValue("true").
 		ErrorMessages("You must accept the terms"),
 )

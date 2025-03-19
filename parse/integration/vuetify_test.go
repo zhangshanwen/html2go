@@ -7,7 +7,8 @@ import (
 // VuetifyTestCases contains test scenarios for Vuetify components
 var VuetifyTestCases = []HTMLGoTestCase{
 	{
-		Name: "v-btn basic",
+		Name:       "v-btn basic",
+		VuetifyPkg: "v",
 		HTML: `
 <div>
   <v-btn color="primary">Submit</v-btn>
@@ -17,7 +18,7 @@ var VuetifyTestCases = []HTMLGoTestCase{
 
 var n = Body(
 	Div(
-		VBtn(
+		v.VBtn(
 			Text("Submit"),
 		).Color("primary"),
 	),
@@ -25,7 +26,8 @@ var n = Body(
 `,
 	},
 	{
-		Name: "v-card with content",
+		Name:       "v-card with content",
+		VuetifyPkg: "v",
 		HTML: `
 <v-card>
   <v-card-title>Card Title</v-card-title>
@@ -39,18 +41,18 @@ var n = Body(
 		GoCode: `package hello
 
 var n = Body(
-	VCard(
-		VCardTitle(
+	v.VCard(
+		v.VCardTitle(
 			Text("Card Title"),
 		),
-		VCardText(
+		v.VCardText(
 			Text("This is the card content with some text."),
 		),
-		VCardActions(
-			VBtn(
+		v.VCardActions(
+			v.VBtn(
 				Text("Action"),
 			).Color("primary"),
-			VBtn(
+			v.VBtn(
 				Text("Cancel"),
 			).Color("secondary"),
 		),
@@ -59,7 +61,8 @@ var n = Body(
 `,
 	},
 	{
-		Name: "v-form with inputs",
+		Name:       "v-form with inputs",
+		VuetifyPkg: "v",
 		HTML: `
 <v-form>
   <v-text-field label="Name" required></v-text-field>
@@ -71,13 +74,13 @@ var n = Body(
 		GoCode: `package hello
 
 var n = Body(
-	VForm(
-		VTextField().Label("Name").
+	v.VForm(
+		v.VTextField().Label("Name").
 			Attr("required", ""),
-		VTextField().Label("Email").
+		v.VTextField().Label("Email").
 			Type("email"),
-		VCheckbox().Label("Subscribe to newsletter"),
-		VBtn(
+		v.VCheckbox().Label("Subscribe to newsletter"),
+		v.VBtn(
 			Text("Submit"),
 		).Attr("type", "submit").
 			Color("success"),
