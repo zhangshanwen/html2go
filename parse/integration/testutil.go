@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/zhangshanwen/html2go/parse"
 	"github.com/theplant/testingutils"
+	"github.com/zhangshanwen/html2go/parse"
 )
 
 // HTMLGoTestCase defines a single test case for HTML to Go code conversion

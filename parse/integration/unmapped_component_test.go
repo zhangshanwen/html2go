@@ -19,7 +19,7 @@ var UnmappedComponentTestCases = []HTMLGoTestCase{
 
 var n = Body(
 	Div(
-		CustomComponent(
+		h.Tag("custom-component").Children(
 			Span("Child content"),
 		).Attr("prop1", "value1").
 			Attr("prop2", "value2"),
@@ -39,12 +39,12 @@ var n = Body(
 		GoCode: `package hello
 
 var n = Body().Children(
-	CustomGrid().Attr("row-gap", "10px").
+	h.Tag("custom-grid").Attr("row-gap", "10px").
 		Attr("column-gap", "15px").Children(
-		CustomCell().Attr("span", "2").Children(
+		h.Tag("custom-cell").Attr("span", "2").Children(
 			Text("Cell 1"),
 		),
-		CustomCell().Attr("span", "1").Children(
+		h.Tag("custom-cell").Attr("span", "1").Children(
 			Text("Cell 2"),
 		),
 	),
@@ -65,12 +65,84 @@ var n = Body().Children(
 
 var n = Body(
 	Div(
-		CustomHeader(
+		h.Tag("custom-header").Children(
 			VBtn(
 				Text("Action"),
 			).Color("primary"),
 		).Attr("title", "Page Title"),
 		VXBtn().Text("VuetifyX Button"),
+	),
+)
+`,
+	},
+	{
+		Name: "Unknown vuetify component",
+		HTML: `
+<div>
+  <v-unknown prop1="value1" prop2="value2">
+    <span>Child content</span>
+  </v-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = Body(
+	Div(
+		h.Tag("v-unknown").Children(
+			Span("Child content"),
+		).Attr("prop1", "value1").
+			Attr("prop2", "value2"),
+	),
+)
+`,
+	},
+	{
+		Name: "Unknown vuetifyx component",
+		HTML: `
+<div>
+  <vx-unknown prop1="value1" prop2="value2">
+    <span>Child content</span>
+  </vx-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = Body(
+	Div(
+		h.Tag("vx-unknown").Children(
+			Span("Child content"),
+		).Attr("prop1", "value1").
+			Attr("prop2", "value2"),
+	),
+)
+`,
+	},
+	{
+		Name: "Mixed known and all types of unknown components",
+		HTML: `
+<div>
+  <custom-component prop="value">Custom content</custom-component>
+  <v-unknown color="primary">Unknown Vuetify</v-unknown>
+  <vx-unknown text="Test">Unknown VuetifyX</vx-unknown>
+  <v-btn color="success">Known component</v-btn>
+</div>
+`,
+		GoCode: `package hello
+
+var n = Body(
+	Div(
+		h.Tag("custom-component").Children(
+			Text("Custom content"),
+		).Attr("prop", "value"),
+		h.Tag("v-unknown").Children(
+			Text("Unknown Vuetify"),
+		).Attr("color", "primary"),
+		h.Tag("vx-unknown").Children(
+			Text("Unknown VuetifyX"),
+		).Attr("text", "Test"),
+		VBtn(
+			Text("Known component"),
+		).Color("success"),
 	),
 )
 `,
