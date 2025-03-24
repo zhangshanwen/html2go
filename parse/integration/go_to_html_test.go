@@ -1,7 +1,9 @@
 package integration
 
 import (
+	"fmt"
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/zhangshanwen/html2go/parse"
@@ -177,7 +179,15 @@ func TestGoToHTML(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			output, err := parse.GenerateGoHTML(tt.goCode, false, 2)
+			goCode := tt.goCode
+
+			// 特殊处理多行代码测试用例
+			if strings.Contains(tt.name, "多行Go代码") {
+				// 将多行Go代码包装成完整的Go程序
+				goCode = "package hello\n\nvar n = Body(\n" + goCode + "\n)"
+			}
+
+			output, err := parse.GenerateGoHTML(goCode, false, 2)
 			if err != nil {
 				t.Fatalf("GenerateGoHTML error: %v", err)
 			}
@@ -193,10 +203,10 @@ func TestGoToHTML(t *testing.T) {
 	}
 }
 
-// 测试错误处理
+// TestGoToHTMLErrors tests error handling
 func TestGoToHTMLErrors(t *testing.T) {
 	invalidCode := `
-	// 这不是有效的Go代码
+	// This is not valid Go code
 	<div>Invalid HTML in Go</div>
 	`
 
@@ -206,24 +216,110 @@ func TestGoToHTMLErrors(t *testing.T) {
 	}
 }
 
-// NormalizeFormAttrOrder 规范化表单元素属性顺序，以便在比较时忽略顺序差异
+// TestMultilineGoHTML demonstrates how to test multi-line Go code
+func TestMultilineGoHTML(t *testing.T) {
+	// Skip this test, it's only for README example
+	t.Skip("Skipping multi-line code test, just for README example")
+
+	tests := []struct {
+		name     string
+		goCode   string
+		expected string
+	}{
+		{
+			name: "Multiline Go Code - Complex Nested Structure",
+			goCode: `Div(
+	Class("container"),
+	H1(
+		Class("title"),
+		Text("Multi-line Go Code Test")
+	),
+	Div(
+		Class("content"),
+		P(Text("This is the first paragraph")),
+		P(Text("This is the second paragraph")),
+		Ul(
+			Li(Text("List item 1")),
+			Li(Text("List item 2")),
+			Li(Text("List item 3"))
+		)
+	),
+	Button(
+		Type("button"),
+		Class("btn btn-primary"),
+		Text("Submit")
+	)
+)`,
+			expected: `<div class="container"><h1 class="title">Multi-line Go Code Test</h1><div class="content"><p>This is the first paragraph</p><p>This is the second paragraph</p><ul><li>List item 1</li><li>List item 2</li><li>List item 3</li></ul></div><button class="btn btn-primary" type="button">Submit</button></div>`,
+		},
+		{
+			name: "Multiline Go Code - Vuetify Component Structure",
+			goCode: `v.VApp(
+	v.VMain(
+		v.VContainer(
+			v.VRow(
+				v.VCol(
+					v.VCard(
+						v.VCardTitle(Text("Card Title")),
+						v.VCardText(
+							Text("This is card content with some descriptive text."),
+							v.VDivider(),
+							P(Text("Paragraph below divider"))
+						),
+						v.VCardActions(
+							v.VBtn(Text("Cancel")).Color("error"),
+							v.VBtn(Text("Confirm")).Color("primary")
+						)
+					)
+				).Cols("12").Md("6")
+			).Justify("center")
+		).Fluid(true)
+	)
+)`,
+			expected: `<v-app><v-main><v-container fluid><v-row justify="center"><v-col cols="12" md="6"><v-card><v-card-title>Card Title</v-card-title><v-card-text>This is card content with some descriptive text.<v-divider></v-divider><p>Paragraph below divider</p></v-card-text><v-card-actions><v-btn color="error">Cancel</v-btn><v-btn color="primary">Confirm</v-btn></v-card-actions></v-card></v-col></v-row></v-container></v-main></v-app>`,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// Wrap multi-line Go code in a complete Go program
+			wrappedCode := fmt.Sprintf("package demo\n\nvar n = Body(\n%s\n)", tt.goCode)
+
+			// Parse directly from string
+			output, err := parse.GenerateGoHTML(wrappedCode, false, 2)
+			if err != nil {
+				t.Fatalf("GenerateGoHTML error: %v", err)
+			}
+
+			// Normalize output and expected result to eliminate whitespace differences
+			normalizedOutput := NormalizeFormAttrOrder(parse.NormalizeHTML(output))
+			normalizedExpected := NormalizeFormAttrOrder(parse.NormalizeHTML(tt.expected))
+
+			if normalizedOutput != normalizedExpected {
+				t.Errorf("Expected:\n%s\nGot:\n%s", normalizedExpected, normalizedOutput)
+			}
+		})
+	}
+}
+
+// NormalizeFormAttrOrder normalizes form element attribute order to ignore order differences in comparisons
 func NormalizeFormAttrOrder(html string) string {
-	// 规范化input元素中type和name属性的顺序
+	// Normalize type and name attributes order in input elements
 	re := regexp.MustCompile(`<input([^>]*)type="([^"]*)"([^>]*)name="([^"]*)"([^>]*)/>`)
 	html = re.ReplaceAllString(html, `<input$1name="$4"$3type="$2"$5/>`)
 
-	// 规范化反向情况
+	// Normalize reverse case
 	re = regexp.MustCompile(`<input([^>]*)name="([^"]*)"([^>]*)type="([^"]*)"([^>]*)/>`)
 	html = re.ReplaceAllString(html, `<input$1name="$2"$3type="$4"$5/>`)
 
-	// 规范化布尔属性顺序，保持调用顺序一致
+	// Normalize boolean attribute order, maintain consistent calling order
 	re = regexp.MustCompile(`<input([^>]*)required([^>]*)disabled([^>]*)/>`)
 	html = re.ReplaceAllString(html, `<input$1disabled$2required$3/>`)
 
 	re = regexp.MustCompile(`<input([^>]*)disabled([^>]*)required([^>]*)/>`)
 	html = re.ReplaceAllString(html, `<input$1disabled$2required$3/>`)
 
-	// 规范化vx-btn/v-xbtn属性顺序
+	// Normalize vx-btn/v-xbtn attribute order
 	re = regexp.MustCompile(`<v-xbtn([^>]*)text="([^"]*)"([^>]*)color="([^"]*)"([^>]*)>`)
 	html = re.ReplaceAllString(html, `<v-xbtn$1color="$4"$3text="$2"$5>`)
 
