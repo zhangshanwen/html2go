@@ -232,6 +232,123 @@ var n = h.Body(
 )
 `,
 	},
+	{
+		Name:        "Component types with vuetify and vuetifyx package prefixes",
+		Pkg:         "html",
+		VuetifyPkg:  "vuetify",
+		VuetifyxPkg: "vuetifyx",
+		HTML: `
+<div>
+  <span>Standard HTML element</span>
+  <custom-component>Custom element</custom-component>
+  <v-btn>Known Vuetify component</v-btn>
+  <vx-btn>Known VuetifyX component</vx-btn>
+  <v-unknown>Unknown Vuetify component</v-unknown>
+  <vx-unknown>Unknown VuetifyX component</vx-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = html.Body(
+	html.Div(
+		html.Span("Standard HTML element"),
+		html.Tag("custom-component").Children(
+			html.Text("Custom element"),
+		),
+		vuetify.VBtn(
+			html.Text("Known Vuetify component"),
+		),
+		vuetifyx.VXBtn(
+			html.Text("Known VuetifyX component"),
+		),
+		html.Tag("v-unknown").Children(
+			html.Text("Unknown Vuetify component"),
+		),
+		html.Tag("vx-unknown").Children(
+			html.Text("Unknown VuetifyX component"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:        "Component types with vvv and vvvx package prefixes",
+		Pkg:         "htmlx",
+		VuetifyPkg:  "vvv",
+		VuetifyxPkg: "vvvx",
+		HTML: `
+<div>
+  <span>Standard HTML element</span>
+  <custom-component>Custom element</custom-component>
+  <v-btn>Known Vuetify component</v-btn>
+  <vx-btn>Known VuetifyX component</vx-btn>
+  <v-unknown>Unknown Vuetify component</v-unknown>
+  <vx-unknown>Unknown VuetifyX component</vx-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = htmlx.Body(
+	htmlx.Div(
+		htmlx.Span("Standard HTML element"),
+		htmlx.Tag("custom-component").Children(
+			htmlx.Text("Custom element"),
+		),
+		vvv.VBtn(
+			htmlx.Text("Known Vuetify component"),
+		),
+		vvvx.VXBtn(
+			htmlx.Text("Known VuetifyX component"),
+		),
+		htmlx.Tag("v-unknown").Children(
+			htmlx.Text("Unknown Vuetify component"),
+		),
+		htmlx.Tag("vx-unknown").Children(
+			htmlx.Text("Unknown VuetifyX component"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:        "Component types with vui and vuix package prefixes",
+		Pkg:         "web",
+		VuetifyPkg:  "vui",
+		VuetifyxPkg: "vuix",
+		HTML: `
+<div>
+  <span>Standard HTML element</span>
+  <custom-component>Custom element</custom-component>
+  <v-btn>Known Vuetify component</v-btn>
+  <vx-btn>Known VuetifyX component</vx-btn>
+  <v-unknown>Unknown Vuetify component</v-unknown>
+  <vx-unknown>Unknown VuetifyX component</vx-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = web.Body(
+	web.Div(
+		web.Span("Standard HTML element"),
+		web.Tag("custom-component").Children(
+			web.Text("Custom element"),
+		),
+		vui.VBtn(
+			web.Text("Known Vuetify component"),
+		),
+		vuix.VXBtn(
+			web.Text("Known VuetifyX component"),
+		),
+		web.Tag("v-unknown").Children(
+			web.Text("Unknown Vuetify component"),
+		),
+		web.Tag("vx-unknown").Children(
+			web.Text("Unknown VuetifyX component"),
+		),
+	),
+)
+`,
+	},
 }
 
 // TestUnmappedComponents runs tests for components not in the mapping

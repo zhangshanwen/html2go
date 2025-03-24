@@ -181,7 +181,66 @@ var n = h.Body(
 )
 `,
 	},
+	{
+		Name: "text attr with more children with html pkg",
+		Pkg:  "html",
+		HTML: `
+<div>
+  <span>Hello<b>world</b></span>
+</div>
+`,
+		GoCode: `package hello
 
+var n = html.Body(
+	html.Div(
+		html.Span("").Children(
+			html.Text("Hello"),
+			html.B("world"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name: "text attr with more children with htmlx pkg",
+		Pkg:  "htmlx",
+		HTML: `
+<div>
+  <span>Hello<b>world</b></span>
+</div>
+`,
+		GoCode: `package hello
+
+var n = htmlx.Body(
+	htmlx.Div(
+		htmlx.Span("").Children(
+			htmlx.Text("Hello"),
+			htmlx.B("world"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name: "text attr with more children with web pkg",
+		Pkg:  "web",
+		HTML: `
+<div>
+  <span>Hello<b>world</b></span>
+</div>
+`,
+		GoCode: `package hello
+
+var n = web.Body(
+	web.Div(
+		web.Span("").Children(
+			web.Text("Hello"),
+			web.B("world"),
+		),
+	),
+)
+`,
+	},
 	{
 		Name: "code with javascript",
 		Pkg:  "",
@@ -479,6 +538,98 @@ var n = Body().Children(
 					),
 				),
 			),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:         "children mode with h pkg",
+		Pkg:          "h",
+		ChildrenMode: true,
+		HTML: `
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <b>b string</b>
+  <a class="navbar-brand" href="#">Navbar</a>
+</nav>
+`,
+		GoCode: `package hello
+
+var n = h.Body().Children(
+	h.Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
+		h.B("b string"),
+		h.A().Class("navbar-brand").
+			Href("#").Children(
+			h.Text("Navbar"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:         "children mode with html pkg",
+		Pkg:          "html",
+		ChildrenMode: true,
+		HTML: `
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <b>b string</b>
+  <a class="navbar-brand" href="#">Navbar</a>
+</nav>
+`,
+		GoCode: `package hello
+
+var n = html.Body().Children(
+	html.Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
+		html.B("b string"),
+		html.A().Class("navbar-brand").
+			Href("#").Children(
+			html.Text("Navbar"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:         "children mode with htmlx pkg",
+		Pkg:          "htmlx",
+		ChildrenMode: true,
+		HTML: `
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <b>b string</b>
+  <a class="navbar-brand" href="#">Navbar</a>
+</nav>
+`,
+		GoCode: `package hello
+
+var n = htmlx.Body().Children(
+	htmlx.Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
+		htmlx.B("b string"),
+		htmlx.A().Class("navbar-brand").
+			Href("#").Children(
+			htmlx.Text("Navbar"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:         "children mode with web pkg",
+		Pkg:          "web",
+		ChildrenMode: true,
+		HTML: `
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <b>b string</b>
+  <a class="navbar-brand" href="#">Navbar</a>
+</nav>
+`,
+		GoCode: `package hello
+
+var n = web.Body().Children(
+	web.Nav().Class("navbar navbar-expand-lg navbar-light bg-light").Children(
+		web.B("b string"),
+		web.A().Class("navbar-brand").
+			Href("#").Children(
+			web.Text("Navbar"),
 		),
 	),
 )
