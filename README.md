@@ -1,73 +1,104 @@
 # HTML2Go
 
-A bidirectional conversion tool for translating between HTML and Go code using HTMLGo components.
+一个双向转换工具，用于在 HTML 和使用 HTMLGo 组件的 Go 代码之间进行转换。
 
-## Overview
+## 概述
 
-HTML2Go is a powerful utility designed to facilitate seamless conversion between:
-1. Go code (using htmlgo/vuetify/vuetifyx components) to HTML
-2. HTML to Go code (using htmlgo/vuetify/vuetifyx components)
+HTML2Go 是一个功能强大的工具，设计用于在以下两个方向上实现无缝转换：
+1. Go 代码（使用 htmlgo/vuetify/vuetifyx 组件）到 HTML
+2. HTML 到 Go 代码（使用 htmlgo/vuetify/vuetifyx 组件）
 
-This tool is particularly useful for developers working with Go-based web applications that utilize HTML component libraries like Vuetify and VuetifyX.
+这个工具对于使用基于 Go 的 Web 应用程序并利用 Vuetify 和 VuetifyX 等 HTML 组件库的开发人员特别有用。
 
-## Features
+## 功能特点
 
-- **Bidirectional Conversion**: Convert in both directions - Go to HTML and HTML to Go
-- **Component Support**:
-  - Standard HTML elements
-  - Vuetify components (`v-btn`, `v-card`, etc.)
-  - VuetifyX components (`v-xbtn`, `v-xcard`, etc.)
-  - Custom components
-- **Attribute Handling**: Correctly maps between Go method calls and HTML attributes
-- **Boolean Attributes**: Special handling for boolean attributes like `disabled`, `required`, etc.
-- **Nested Structures**: Support for complex nested component structures
+- **双向转换**：支持两个方向的转换 - Go 代码到 HTML 和 HTML 到 Go 代码
+- **组件支持**：
+  - 标准 HTML 元素
+  - Vuetify 组件（`v-btn`, `v-card` 等）
+  - VuetifyX 组件（`v-xbtn`, `v-xcard` 等）
+  - 自定义组件
+- **属性处理**：正确映射 Go 方法调用和 HTML 属性
+- **布尔属性**：特殊处理 `disabled`, `required` 等布尔属性
+- **嵌套结构**：支持复杂的嵌套组件结构
 
-## Installation
+## 安装
 
-### From Source
+### 从源代码构建
 
 ```bash
-git clone https://github.com/yourusername/html2go.git
+git clone https://github.com/zhangshanwen/html2go.git
 cd html2go
 go build
 ```
 
-### Using Go Install
+### 使用 Go Install 安装
 
 ```bash
-go install github.com/yourusername/html2go@latest
+go install github.com/zhangshanwen/html2go@latest
 ```
 
-## Usage
+## 使用方法
 
-### Convert HTML to Go
+### HTML 转换为 Go 代码
 
 ```bash
-# Simple usage
+# 基本用法
 echo '<div>Hello, world!</div>' | html2go
 
-# Save to file
+# 指定包名
+echo '<div>Hello, world!</div>' | html2go -p mypackage
+
+# 指定 vuetify 包名
+echo '<v-btn>Submit</v-btn>' | html2go -v vuetify
+
+# 指定 vuetifyX 包名
+echo '<v-xbtn>Submit</v-xbtn>' | html2go -vx vuetifyx
+
+# 使用 Children 模式生成
+echo '<div><span>Text</span></div>' | html2go -c
+
+# 保存到文件
 echo '<div>Hello, world!</div>' | html2go > output.go
 
-# Process an HTML file
+# 处理 HTML 文件
 cat input.html | html2go > output.go
 ```
 
-### Convert Go to HTML
+### Go 代码转换为 HTML
 
 ```bash
-# Convert Go code to HTML using the -r flag
+# 使用 -r 标志将 Go 代码转换为 HTML
 echo 'Div(Text("Hello, world!"))' | html2go -r
 
-# Process a Go file
+# 指定 HTML 缩进大小
+echo 'Div(Text("Hello, world!"))' | html2go -r -indent 4
+
+# 禁用 HTML 格式化
+echo 'Div(Text("Hello, world!"))' | html2go -r -format=false
+
+# 处理 Go 文件
 cat input.go | html2go -r > output.html
 ```
 
-## Examples
+### 命令行参数
 
-### HTML to Go Conversion
+#### HTML 到 Go 转换参数
+- `-p <package>`: 指定生成代码的包名
+- `-v <package>`: 指定 Vuetify 组件的包名
+- `-vx <package>`: 指定 VuetifyX 组件的包名
+- `-c`: 启用 Children 模式生成代码
 
-Input (HTML):
+#### Go 到 HTML 转换参数
+- `-r`: 启用反向模式（Go 代码到 HTML）
+- `-indent <size>`: 设置 HTML 缩进大小（默认：2）
+- `-format <bool>`: 是否格式化生成的 HTML（默认：true）
+
+## 示例
+
+### HTML 到 Go 代码转换
+
+输入（HTML）:
 ```html
 <div class="container">
   <h1>Hello, World!</h1>
@@ -75,7 +106,7 @@ Input (HTML):
 </div>
 ```
 
-Output (Go):
+输出（Go）:
 ```go
 package main
 
@@ -93,9 +124,9 @@ var n = Body(
 )
 ```
 
-### Go to HTML Conversion
+### Go 到 HTML 转换
 
-Input (Go):
+输入（Go）:
 ```go
 Div(
     Class("container"),
@@ -109,7 +140,7 @@ Div(
 )
 ```
 
-Output (HTML):
+输出（HTML）:
 ```html
 <div class="container">
   <h1>Hello, World!</h1>
@@ -117,24 +148,24 @@ Output (HTML):
 </div>
 ```
 
-## Supported Components
+## 支持的组件
 
-- **HTML Elements**: div, span, p, h1-h6, input, button, form, etc.
-- **Vuetify Components**: v-btn, v-card, v-text-field, v-select, etc.
-- **VuetifyX Components**: v-xbtn, v-xcard, v-xdialog, etc.
-- **Custom Components**: Support for custom-defined components
+- **HTML 元素**: div, span, p, h1-h6, input, button, form 等
+- **Vuetify 组件**: v-btn, v-card, v-text-field, v-select 等
+- **VuetifyX 组件**: v-xbtn, v-xcard, v-xdialog 等
+- **自定义组件**: 支持自定义定义的组件
 
-## Boolean Attributes
+## 布尔属性
 
-Boolean attributes (like `disabled`, `required`, etc.) are handled specially:
-- In Go code: `Disabled(true)` 
-- In HTML: `disabled` (without a value)
+布尔属性（如 `disabled`, `required` 等）会被特殊处理：
+- 在 Go 代码中: `Disabled(true)` 
+- 在 HTML 中: `disabled`（没有值）
 
-## Advanced Usage
+## 高级用法
 
-### Custom Component Handling
+### 自定义组件处理
 
-For custom components not directly mapped, use the `Tag` function:
+对于不直接映射的自定义组件，使用 `Tag` 函数：
 
 ```go
 Tag("custom-element", 
@@ -143,29 +174,49 @@ Tag("custom-element",
 )
 ```
 
-### Using Children Method
+### 使用 Children 方法
 
-For components that accept child elements:
+对于接受子元素的组件：
 
 ```go
 Div(
     Children(
-        Span(Text("Child 1")),
-        Span(Text("Child 2")),
+        Span(Text("子元素 1")),
+        Span(Text("子元素 2")),
     ),
 )
 ```
 
-## Contributing
+### 处理 Alpine.js 属性
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+HTML2Go 支持 Alpine.js 属性的处理：
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```html
+<div x-data="{open: false}" x-on:click="open = true">
+  点击打开
+</div>
+```
 
-## License
+转换为 Go 代码：
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+```go
+Div(
+    Attr("x-data", "{open: false}"),
+    Attr("x-on:click", "open = true"),
+    Text("点击打开"),
+)
+```
+
+## 贡献
+
+欢迎贡献！请随时提交 Pull Request。
+
+1. Fork 仓库
+2. 创建您的特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交您的更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 打开 Pull Request
+
+## 许可证
+
+本项目使用 MIT 许可证 - 详情请查看 LICENSE 文件。
