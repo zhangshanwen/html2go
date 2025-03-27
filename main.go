@@ -18,8 +18,9 @@ func main() {
 	childrenMode := flag.Bool("c", false, "generate children pattern")
 
 	// Go 到 HTML 的相关参数
+
+	indentSize := flag.Int("indent", 2, "HTML缩进大小")
 	reverseMode := flag.Bool("r", false, "启用反向模式 (Go 代码到 HTML)")
-	indentSize := flag.Int("indent", 2, "HTML 缩进大小")
 	formatHTML := flag.Bool("format", true, "是否格式化生成的 HTML")
 
 	flag.Parse()

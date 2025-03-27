@@ -7,6 +7,46 @@ import (
 // VuetifyXTestCases contains test scenarios for VuetifyX components
 var VuetifyXTestCases = []HTMLGoTestCase{
 	{
+		Name:        "empty-pkg with empty VuetifyxPkg",
+		Pkg:         "",
+		VuetifyxPkg: "",
+		HTML: `
+<div>
+  <vx-btn text="Submit" color="primary" on-click="handleSubmit"></vx-btn>
+</div>
+`,
+		GoCode: `package hello
+
+var n = Body(
+	Div(
+		VXBtn().Text("Submit").
+			Color("primary").
+			OnClick("handleSubmit"),
+	),
+)
+`,
+	},
+	{
+		Name:        "h-pkg with empty VuetifyxPkg",
+		Pkg:         "h",
+		VuetifyxPkg: "",
+		HTML: `
+<div>
+  <vx-btn text="Submit" color="primary" on-click="handleSubmit"></vx-btn>
+</div>
+`,
+		GoCode: `package hello
+
+var n = h.Body(
+	h.Div(
+		VXBtn().Text("Submit").
+			Color("primary").
+			OnClick("handleSubmit"),
+	),
+)
+`,
+	},
+	{
 		Name:        "vx-btn basic",
 		VuetifyxPkg: "vx",
 		HTML: `

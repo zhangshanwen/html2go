@@ -106,10 +106,12 @@ func (fc *funcCall) MarshalCode(methodNames []string, pkg string, vuetifyPkg str
 	// 处理组件或普通HTML标签
 	if fc.IsComponent {
 		// 根据组件类型选择包前缀
-		usePkg := pkg
-		if fc.ComponentDef.Type == "vuetify" && vuetifyPkg != "" {
+		usePkg := pkg // 默认使用pkg
+
+		// 根据组件类型设置对应的包前缀
+		if fc.ComponentDef.Type == "vuetify" {
 			usePkg = vuetifyPkg
-		} else if fc.ComponentDef.Type == "vuetifyx" && vuetifyxPkg != "" {
+		} else if fc.ComponentDef.Type == "vuetifyx" {
 			usePkg = vuetifyxPkg
 		}
 

@@ -7,6 +7,46 @@ import (
 // VuetifyTestCases contains test scenarios for Vuetify components
 var VuetifyTestCases = []HTMLGoTestCase{
 	{
+		Name:       "empty-pkg with empty VuetifyPkg",
+		Pkg:        "",
+		VuetifyPkg: "",
+		HTML: `
+<div>
+  <v-btn color="primary">Submit</v-btn>
+</div>
+`,
+		GoCode: `package hello
+
+var n = Body(
+	Div(
+		VBtn(
+			Text("Submit"),
+		).Color("primary"),
+	),
+)
+`,
+	},
+	{
+		Name:       "h-pkg with empty VuetifyPkg",
+		Pkg:        "h",
+		VuetifyPkg: "",
+		HTML: `
+<div>
+  <v-btn color="primary">Submit</v-btn>
+</div>
+`,
+		GoCode: `package hello
+
+var n = h.Body(
+	h.Div(
+		VBtn(
+			h.Text("Submit"),
+		).Color("primary"),
+	),
+)
+`,
+	},
+	{
 		Name:       "v-btn basic",
 		VuetifyPkg: "v",
 		HTML: `

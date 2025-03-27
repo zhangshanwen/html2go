@@ -349,6 +349,133 @@ var n = web.Body(
 )
 `,
 	},
+	{
+		Name:        "Unknown components with attributes and event handlers",
+		Pkg:         "html",
+		VuetifyPkg:  "v",
+		VuetifyxPkg: "vx",
+		HTML: `
+<div>
+  <custom-dropdown @change="handleChange" :items="dropdownItems" selected-index="0">
+    <template slot="item" slot-scope="props">
+      <span class="item-text">{{ props.item.text }}</span>
+    </template>
+  </custom-dropdown>
+  <v-unknown @click="handleClick" :data="jsonData" loading></v-unknown>
+  <vx-unknown @input="handleInput" required disabled></vx-unknown>
+</div>
+`,
+		GoCode: `package hello
+
+var n = html.Body(
+	html.Div(
+		html.Tag("custom-dropdown").Children(
+			html.Template(
+				html.Span("{{ props.item.text }}").Class("item-text"),
+			).Attr("slot", "item").
+				Attr("slot-scope", "props"),
+		).Attr("x-on@change", "handleChange").
+			Attr("x-bind:items", "dropdownItems").
+			Attr("selected-index", "0"),
+		html.Tag("v-unknown").Attr("x-on@click", "handleClick").
+			Attr("x-bind:data", "jsonData").
+			Attr("loading", ""),
+		html.Tag("vx-unknown").Attr("x-on@input", "handleInput").
+			Attr("required", "").
+			Attr("disabled", ""),
+	),
+)
+`,
+	},
+	{
+		Name:        "Advanced mixed components with dynamic content",
+		Pkg:         "h",
+		VuetifyPkg:  "",
+		VuetifyxPkg: "",
+		HTML: `
+<div>
+  <custom-layout>
+    <v-btn color="primary" v-if="showButton">Click Me</v-btn>
+    <template v-else>
+      <span>Button not available</span>
+    </template>
+    <vx-data-table :headers="tableHeaders" :items="tableItems">
+      <template slot="item.actions" slot-scope="{ item }">
+        <custom-actions :item="item"></custom-actions>
+      </template>
+    </vx-data-table>
+  </custom-layout>
+</div>
+`,
+		GoCode: `package hello
+
+var n = h.Body(
+	h.Div(
+		h.Tag("custom-layout").Children(
+			VBtn(
+				h.Text("Click Me"),
+			).Color("primary").
+				Attr("v-if", "showButton"),
+			h.Template(
+				h.Span("Button not available"),
+			).Attr("v-else", ""),
+			h.Tag("vx-data-table").Children(
+				h.Template(
+					h.Tag("custom-actions").Attr("x-bind:item", "item"),
+				).Attr("slot", "item.actions").
+					Attr("slot-scope", "{ item }"),
+			).Attr("x-bind:headers", "tableHeaders").
+				Attr("x-bind:items", "tableItems"),
+		),
+	),
+)
+`,
+	},
+	{
+		Name:        "Component combinations with different directive syntaxes",
+		Pkg:         "html",
+		VuetifyPkg:  "vuetify",
+		VuetifyxPkg: "vuetifyx",
+		HTML: `
+<div>
+  <custom-container v-bind:config="containerConfig" v-on:ready="onReady">
+    <v-tabs v-model="activeTab">
+      <v-tab v-for="tab in tabs" :key="tab.id">{{ tab.name }}</v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="activeTab">
+      <v-tab-item v-for="tab in tabs" :key="tab.id">
+        <vx-content :content="tab.content" v-if="tab.hasContent"></vx-content>
+        <custom-placeholder v-else></custom-placeholder>
+      </v-tab-item>
+    </v-tabs-items>
+  </custom-container>
+</div>
+`,
+		GoCode: `package hello
+
+var n = html.Body(
+	html.Div(
+		html.Tag("custom-container").Children(
+			vuetify.VTabs(
+				vuetify.VTab(
+					html.Text("{{ tab.name }}"),
+				).Attr("v-for", "tab in tabs").
+					Attr("x-bind:key", "tab.id"),
+			).Attr("v-model", "activeTab"),
+			html.Tag("v-tabs-items").Children(
+				html.Tag("v-tab-item").Children(
+					html.Tag("vx-content").Attr("x-bind:content", "tab.content").
+						Attr("v-if", "tab.hasContent"),
+					html.Tag("custom-placeholder").Attr("v-else", ""),
+				).Attr("v-for", "tab in tabs").
+					Attr("x-bind:key", "tab.id"),
+			).Attr("v-model", "activeTab"),
+		).Attr("v-bind:config", "containerConfig").
+			Attr("v-on:ready", "onReady"),
+	),
+)
+`,
+	},
 }
 
 // TestUnmappedComponents runs tests for components not in the mapping
